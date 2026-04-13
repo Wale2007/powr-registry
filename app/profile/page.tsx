@@ -66,6 +66,16 @@ export default function ProfilePage() {
         }
 
         setUser(data);
+
+        // Auto-Sync GitHub if connected but score is 0
+        if (data.github_username && (!data.reputation_points || data.reputation_points === 0)) {
+          getCommitCount(data.github_username).then(async (res) => {
+            if (res.success) {
+              await updateReputation(session.user.id, data.github_username, res.commitCount, res.rank);
+              setUser((p: any) => ({ ...p, reputation_points: res.commitCount, role: res.rank }));
+            }
+          });
+        }
       }
       setLoading(false);
     };
@@ -84,6 +94,11 @@ export default function ProfilePage() {
     }
     setSaving("wallet");
     try {
+      // Force Explicit Unlock Popup
+      await window.ethereum.request({
+        method: "wallet_requestPermissions",
+        params: [{ eth_accounts: {} }],
+      });
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       const addr = accounts[0].toLowerCase();
       await supabase.from("profiles").update({ wallet_address: addr }).eq("id", sessionId);
