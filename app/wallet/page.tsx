@@ -15,14 +15,13 @@ type TxStatus = "idle" | "pending" | "success" | "error";
 
 const CHAIN_ORDER: ChainId[] = ["ethereum", "bsc", "base", "solana", "bitcoin", "tron"];
 const POPULAR_TOKENS = [
-  { symbol: "ETH", name: "Ethereum", chain: "ethereum", logo: "Ξ" },
-  { symbol: "BNB", name: "BNB", chain: "bsc", logo: "⬡" },
-  { symbol: "SOL", name: "Solana", chain: "solana", logo: "◎" },
-  { symbol: "BTC", name: "Bitcoin", chain: "bitcoin", logo: "₿" },
-  { symbol: "TRX", name: "Tron", chain: "tron", logo: "♦" },
-  { symbol: "USDT", name: "Tether", chain: "ethereum", logo: "₮" },
-  { symbol: "USDC", name: "USD Coin", chain: "base", logo: "$" },
-  { symbol: "PEPE", name: "Pepe", chain: "ethereum", logo: "🐸" },
+  { symbol: "ETH", name: "Ethereum", chain: "ethereum", logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png" },
+  { symbol: "BNB", name: "BNB", chain: "bsc", logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png" },
+  { symbol: "SOL", name: "Solana", chain: "solana", logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png" },
+  { symbol: "BTC", name: "Bitcoin", chain: "bitcoin", logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/bitcoin/info/logo.png" },
+  { symbol: "TRX", name: "Tron", chain: "tron", logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/info/logo.png" },
+  { symbol: "USDT", name: "Tether", chain: "ethereum", logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" },
+  { symbol: "USDC", name: "USD Coin", chain: "base", logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/base/assets/0x833589fCD6aDC687292394f15601E13D5cC329f5/logo.png" },
 ];
 
 export default function WalletPage() {
@@ -119,8 +118,11 @@ export default function WalletPage() {
 
   const totalUSD = balances && prices
     ? CHAIN_ORDER.reduce((sum, chainId) => {
-        const bal = parseFloat(balances[chainId] || "0");
-        return sum + bal * (prices[chainId] ?? 0);
+        const balRaw = balances[chainId] || "0";
+        const bal = parseFloat(balRaw);
+        const validBal = isNaN(bal) ? 0 : bal;
+        const price = prices[chainId] ?? 0;
+        return sum + validBal * price;
       }, 0)
     : 0;
 
@@ -136,16 +138,16 @@ export default function WalletPage() {
         <AnimatedBackground />
         <Navbar />
         <div className="relative z-10 max-w-md mx-auto px-6 py-24 flex flex-col items-center animate-fade-up">
-          <div className="w-24 h-24 rounded-2xl mb-8 flex items-center justify-center text-4xl"
-            style={{ background: "linear-gradient(135deg, #3B82F6 0%, #9945FF 100%)" }}>
-            💎
+          <div className="w-24 h-24 rounded-2xl mb-8 flex items-center justify-center overflow-hidden"
+            style={{ background: "#0D1526", border: "1px solid #1E2D4A" }}>
+            <img src="/powr_logo.png" alt="POWR" className="w-16 h-16 object-contain" />
           </div>
           <h1 className="text-3xl font-black text-center mb-3">POWR Wallet</h1>
           <p className="text-center text-sm mb-10" style={{ color: "#94A3B8" }}>
             A non-custodial multi-chain wallet secured by your private seed phrase. Your keys, your crypto.
           </p>
           <button onClick={handleCreateWallet} disabled={generating} className="btn-primary w-full h-14 text-base font-bold">
-            {generating ? <div className="spinner mx-auto" /> : "🔐 Create New Wallet"}
+            {generating ? <div className="spinner mx-auto" /> : "Create New Wallet"}
           </button>
           <p className="text-xs text-center mt-4" style={{ color: "#475569" }}>
             Your seed phrase is encrypted and stored only on this device.
@@ -178,8 +180,7 @@ export default function WalletPage() {
         <div className="rounded-2xl p-6 mb-6"
           style={{ background: "linear-gradient(135deg, #0D1E3C 0%, #1a0d3c 100%)", border: "1px solid #1E2D4A" }}>
           <p className="text-xs font-semibold mb-1" style={{ color: "#64748B" }}>TOTAL BALANCE</p>
-          <h2 className="text-4xl font-black text-white mb-1">${totalUSD.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
-          <p className="text-sm" style={{ color: "#10B981" }}>Across 6 chains</p>
+          <h2 className="text-4xl font-black text-white mb-0">${totalUSD.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
         </div>
 
         {/* ─── Chain Selector ─────────────────────────────────────────── */}
@@ -195,10 +196,15 @@ export default function WalletPage() {
                   background: isActive ? `${c.color}18` : "#0D1526",
                   border: `1px solid ${isActive ? c.color : "#1E2D4A"}`,
                 }}>
-                <span className="text-xl font-bold" style={{ color: c.color }}>{c.icon}</span>
+                <div className="w-6 h-6 rounded-full overflow-hidden bg-white/10 mb-1">
+                  <img src={(c as any).logo} alt={c.symbol} className="w-full h-full object-contain" />
+                </div>
                 <span className="text-xs font-bold text-white">{c.symbol}</span>
                 <span className="text-xs font-mono" style={{ color: "#64748B" }}>
-                  {parseFloat(bal || "0").toFixed(4)}
+                  {(() => {
+                    const b = parseFloat(bal || "0");
+                    return isNaN(b) ? "0.0000" : b.toFixed(4);
+                  })()}
                 </span>
               </button>
             );
@@ -209,9 +215,8 @@ export default function WalletPage() {
         <div className="rounded-2xl p-5 mb-6" style={{ background: "#0D1526", border: "1px solid #1E2D4A" }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold"
-                style={{ background: `${chain.color}20`, color: chain.color }}>
-                {chain.icon}
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 flex items-center justify-center">
+                <img src={(chain as any).logo} alt={chain.symbol} className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <p className="font-bold text-white">{chain.name}</p>
@@ -219,7 +224,12 @@ export default function WalletPage() {
               </div>
             </div>
             <div className="text-right">
-              <p className="font-mono font-bold text-white text-lg">{parseFloat(currentBalance).toFixed(6)}</p>
+              <p className="font-mono font-bold text-white text-lg">
+                {(() => {
+                  const b = parseFloat(currentBalance);
+                  return isNaN(b) ? "0.000000" : b.toFixed(6);
+                })()}
+              </p>
               <p className="text-xs" style={{ color: "#64748B" }}>${currentBalanceUSD.toFixed(2)}</p>
             </div>
           </div>
@@ -245,7 +255,7 @@ export default function WalletPage() {
                 color: activeTab === tab ? "white" : "#64748B",
                 border: "1px solid #1E2D4A",
               }}>
-              {tab === "portfolio" ? "📊 Assets" : tab === "send" ? "📤 Send" : tab === "receive" ? "📥 Receive" : "🔄 Swap"}
+              {tab === "portfolio" ? "Assets" : tab === "send" ? "Send" : tab === "receive" ? "Receive" : "Swap"}
             </button>
           ))}
         </div>
@@ -260,7 +270,7 @@ export default function WalletPage() {
                 <p className="font-bold text-white">Your Assets</p>
                 <button onClick={() => setRevealed(!revealed)} className="text-xs px-3 py-1 rounded-lg"
                   style={{ background: "rgba(239,68,68,0.1)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.2)" }}>
-                  {revealed ? "🙈 Hide Seed" : "🔑 Backup Phrase"}
+                  {revealed ? "Hide Seed" : "Backup Phrase"}
                 </button>
               </div>
 
@@ -274,9 +284,8 @@ export default function WalletPage() {
                       className="flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all hover:opacity-80"
                       style={{ background: "rgba(0,0,0,0.3)", border: "1px solid #1E2D4A" }}>
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold"
-                          style={{ background: `${c.color}20`, color: c.color }}>
-                          {c.icon}
+                        <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 flex items-center justify-center">
+                          <img src={(c as any).logo} alt={c.symbol} className="w-6 h-6 object-contain" />
                         </div>
                         <div>
                           <p className="font-bold text-white text-sm">{c.symbol}</p>
@@ -312,7 +321,9 @@ export default function WalletPage() {
           {activeTab === "send" && (
             <div className="animate-fade-up flex flex-col gap-4">
               <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "rgba(0,0,0,0.3)" }}>
-                <span className="text-2xl" style={{ color: chain.color }}>{chain.icon}</span>
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 flex items-center justify-center">
+                  <img src={(chain as any).logo} alt={chain.symbol} className="w-7 h-7 object-contain" />
+                </div>
                 <div>
                   <p className="text-sm font-bold text-white">Sending {chain.symbol}</p>
                   <p className="text-xs" style={{ color: "#64748B" }}>Balance: {currentBalance}</p>
@@ -407,7 +418,9 @@ export default function WalletPage() {
                     className="flex items-center justify-between p-3 rounded-xl cursor-pointer hover:opacity-80 transition-all"
                     style={{ background: "rgba(0,0,0,0.3)", border: "1px solid #1E2D4A" }}>
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl">{token.logo}</span>
+                      <div className="w-8 h-8 rounded-full overflow-hidden bg-white/5 flex items-center justify-center">
+                        <img src={token.logo} alt={token.symbol} className="w-6 h-6 object-contain" />
+                      </div>
                       <div>
                         <p className="font-bold text-white text-sm">{token.symbol}</p>
                         <p className="text-xs" style={{ color: "#64748B" }}>{token.name}</p>

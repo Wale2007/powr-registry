@@ -20,6 +20,7 @@ export const CHAINS = {
     rpc: "https://eth.drpc.org",
     viemChain: mainnet,
     explorer: "https://etherscan.io",
+    logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png",
   },
   bsc: {
     id: "bsc", name: "BNB Smart Chain", symbol: "BNB", icon: "⬡",
@@ -27,6 +28,7 @@ export const CHAINS = {
     rpc: "https://bsc-dataseed.binance.org",
     viemChain: bsc,
     explorer: "https://bscscan.com",
+    logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png",
   },
   base: {
     id: "base", name: "Base", symbol: "ETH", icon: "◉",
@@ -34,6 +36,7 @@ export const CHAINS = {
     rpc: "https://mainnet.base.org",
     viemChain: base,
     explorer: "https://basescan.org",
+    logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/base/info/logo.png",
   },
   solana: {
     id: "solana", name: "Solana", symbol: "SOL", icon: "◎",
@@ -41,6 +44,7 @@ export const CHAINS = {
     rpc: "https://api.mainnet-beta.solana.com",
     viemChain: null,
     explorer: "https://solscan.io",
+    logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png",
   },
   bitcoin: {
     id: "bitcoin", name: "Bitcoin", symbol: "BTC", icon: "₿",
@@ -48,6 +52,7 @@ export const CHAINS = {
     rpc: "https://blockchain.info",
     viemChain: null,
     explorer: "https://mempool.space",
+    logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/bitcoin/info/logo.png",
   },
   tron: {
     id: "tron", name: "Tron", symbol: "TRX", icon: "♦",
@@ -55,6 +60,7 @@ export const CHAINS = {
     rpc: "https://api.trongrid.io",
     viemChain: null,
     explorer: "https://tronscan.org",
+    logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/info/logo.png",
   },
 } as const;
 
@@ -154,8 +160,10 @@ async function fetchSolanaBalance(address: string): Promise<string> {
 async function fetchBitcoinBalance(address: string): Promise<string> {
   try {
     const res = await fetch(`https://blockchain.info/q/addressbalance/${address}`);
-    const satoshis = await res.text();
-    return (parseInt(satoshis || "0") / 1e8).toFixed(8);
+    const text = await res.text();
+    const satoshis = parseInt(text);
+    if (isNaN(satoshis)) return "0.00000000";
+    return (satoshis / 1e8).toFixed(8);
   } catch {
     return "0.00000000";
   }
