@@ -32,7 +32,7 @@ const GUIDE_STEPS = [
 export default function BobTestnet() {
   const [sessionId, setSessionId] = useState("");
   const [taskStatus, setTaskStatus] = useState<Record<string, "idle" | "pending" | "done" | "error">>({
-    addNetwork: "idle", sendTx: "idle", selfTx: "idle",
+    addNetwork: "idle", sendTx: "idle", selfTx: "idle", bridgeTx: "idle", swapTxBob: "idle"
   });
   const [messages, setMessages] = useState<Record<string, string>>({});
   const router = useRouter();
@@ -102,10 +102,44 @@ export default function BobTestnet() {
     }
   };
 
+  const bridgeTransaction = async () => {
+    if (!window.ethereum) { setTaskState("bridgeTx", "error", "MetaMask not detected!"); return; }
+    setTaskState("bridgeTx", "pending");
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const txHash = await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [{ from: accounts[0], to: "0xB0B0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0", value: "0x11C37937E08000", data: "0x", chainId: BOB_SEPOLIA.chainId }],
+      });
+      await claimXP("bridgeTx", 40);
+      setTaskState("bridgeTx", "done", `Bridge mock complete! TX: ${txHash.slice(0, 12)}... +40 XP`);
+    } catch (err: any) {
+      setTaskState("bridgeTx", "error", err.code === 4001 ? "Transaction rejected." : (err.message || "Failed."));
+    }
+  };
+
+  const swapTransactionBob = async () => {
+    if (!window.ethereum) { setTaskState("swapTxBob", "error", "MetaMask not detected!"); return; }
+    setTaskState("swapTxBob", "pending");
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const txHash = await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [{ from: accounts[0], to: "0x2222222222222222222222222222222222222222", value: "0x5AF3107A4000", data: "0x", chainId: BOB_SEPOLIA.chainId }],
+      });
+      await claimXP("swapTxBob", 50);
+      setTaskState("swapTxBob", "done", `Swap complete! TX: ${txHash.slice(0, 12)}... +50 XP`);
+    } catch (err: any) {
+      setTaskState("swapTxBob", "error", err.code === 4001 ? "Transaction rejected." : (err.message || "Failed."));
+    }
+  };
+
   const TASKS = [
     { key: "addNetwork", title: "Add BOB Sepolia Network", desc: "Add the BOB Sepolia testnet to MetaMask.", xp: 20, action: addNetwork },
     { key: "sendTx", title: "Send Test ETH", desc: "Send 0.001 ETH to a burn address on BOB Sepolia.", xp: 30, action: sendTransaction },
     { key: "selfTx", title: "Execute Self-Transaction", desc: "Send a zero-value transaction to your own address.", xp: 30, action: selfTransaction },
+    { key: "bridgeTx", title: "Bridge Tokens via BOB Gateway", desc: "Simulates bridging assets securely into the BOB Network.", xp: 40, action: bridgeTransaction },
+    { key: "swapTxBob", title: "Swap Tokens on Layer 2", desc: "Execute a mock swap utilizing BOB's high-speed sequencer.", xp: 50, action: swapTransactionBob },
   ];
 
   return (

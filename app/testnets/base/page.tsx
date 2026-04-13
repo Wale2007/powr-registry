@@ -32,7 +32,7 @@ const GUIDE_STEPS = [
 export default function BaseTestnet() {
   const [sessionId, setSessionId] = useState("");
   const [taskStatus, setTaskStatus] = useState<Record<string, "idle" | "pending" | "done" | "error">>({
-    addNetwork: "idle", sendTx: "idle", interactContract: "idle",
+    addNetwork: "idle", sendTx: "idle", interactContract: "idle", swapTx: "idle"
   });
   const [messages, setMessages] = useState<Record<string, string>>({});
   const router = useRouter();
@@ -102,10 +102,27 @@ export default function BaseTestnet() {
     }
   };
 
+  const swapTransaction = async () => {
+    if (!window.ethereum) { setTaskState("swapTx", "error", "MetaMask not detected!"); return; }
+    setTaskState("swapTx", "pending");
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const txHash = await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [{ from: accounts[0], to: "0x1111111254fb6c44bac0bed2854e76f90643097d", value: "0x38D7EA4C68000", data: "0x", chainId: BASE_SEPOLIA.chainId }],
+      });
+      await claimXP("swapTx", 50);
+      setTaskState("swapTx", "done", `Swap complete! TX: ${txHash.slice(0, 12)}... +50 XP`);
+    } catch (err: any) {
+      setTaskState("swapTx", "error", err.code === 4001 ? "Transaction rejected." : (err.message || "Failed."));
+    }
+  };
+
   const TASKS = [
     { key: "addNetwork", title: "Add Base Sepolia Network", desc: "Add the Base Sepolia testnet to your MetaMask wallet.", xp: 20, action: addNetwork },
     { key: "sendTx", title: "Send Test ETH", desc: "Send 0.001 test ETH to a burn address on Base Sepolia.", xp: 30, action: sendTransaction },
     { key: "interactContract", title: "Execute Self-Transaction", desc: "Send a zero-value transaction to yourself (simulates contract interaction).", xp: 30, action: interactContract },
+    { key: "swapTx", title: "Swap ETH for MockUSDC", desc: "Simulate a DEX swap by routing a transaction to a mock aggregator contract.", xp: 50, action: swapTransaction },
   ];
 
   return (
