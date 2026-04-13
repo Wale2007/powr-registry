@@ -88,7 +88,9 @@ export default function ProfilePage() {
       const addr = accounts[0].toLowerCase();
       await supabase.from("profiles").update({ wallet_address: addr }).eq("id", sessionId);
       setUser((p: any) => ({ ...p, wallet_address: addr }));
-    } catch {}
+    } catch (err: any) {
+      alert("Wallet Error: " + (err.message || "Connection failed. Please check your MetaMask app."));
+    }
     setSaving(null);
   };
 
