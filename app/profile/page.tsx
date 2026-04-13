@@ -34,7 +34,15 @@ export default function ProfilePage() {
   }, [router]);
 
   const connectWallet = async () => {
-    if (!window.ethereum) { alert("Install MetaMask!"); return; }
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!window.ethereum) {
+      if (isMobile) {
+        window.location.href = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`;
+      } else {
+        alert("Please install MetaMask to connect your wallet!");
+      }
+      return;
+    }
     setSaving("wallet");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -45,9 +53,9 @@ export default function ProfilePage() {
     setSaving(null);
   };
 
-  const handleOAuth = async (provider: "twitter" | "discord") => {
+  const handleOAuth = async (provider: "twitter" | "discord" | "github") => {
     setSaving(provider);
-    await supabase.auth.signInWithOAuth({
+    await supabase.auth.linkIdentity({
       provider,
       options: { redirectTo: `${window.location.origin}/profile` },
     });
@@ -123,17 +131,15 @@ export default function ProfilePage() {
                     <button onClick={connectWallet} disabled={saving === "wallet"} className="btn-primary text-xs" style={{ padding: "6px 16px" }}>
                       {saving === "wallet" ? <div className="spinner" /> : "Connect"}
                     </button>
-                  ) : conn.key === "github" ? (
-                    <span className="badge-amber text-xs">Via OAuth</span>
                   ) : null}
                 </div>
               </div>
 
-              {/* Twitter / Discord input */}
-              {(conn.key === "twitter" || conn.key === "discord") && !conn.connected && (
+              {/* Social inputs */}
+              {(conn.key === "twitter" || conn.key === "discord" || conn.key === "github") && !conn.connected && (
                 <div className="flex mt-4">
                   <button 
-                    onClick={() => handleOAuth(conn.key as "twitter" | "discord")} 
+                    onClick={() => handleOAuth(conn.key as "twitter" | "discord" | "github")} 
                     disabled={saving === conn.key} 
                     className="btn-primary flex-1 text-sm bg-white/5 hover:bg-white/10" 
                     style={{ padding: "10px 16px" }}

@@ -57,8 +57,21 @@ export default function BobTestnet() {
     } catch {}
   };
 
+  const checkMetaMask = () => {
+    if (!window.ethereum) {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`;
+      } else {
+        alert("MetaMask not detected! Please install the extension.");
+      }
+      return false;
+    }
+    return true;
+  };
+
   const addNetwork = async () => {
-    if (!window.ethereum) { setTaskState("addNetwork", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("addNetwork", "error", "MetaMask not detected!"); return; }
     setTaskState("addNetwork", "pending");
     try {
       await window.ethereum.request({ method: "wallet_addEthereumChain", params: [BOB_SEPOLIA] });
@@ -71,7 +84,7 @@ export default function BobTestnet() {
   };
 
   const sendTransaction = async () => {
-    if (!window.ethereum) { setTaskState("sendTx", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("sendTx", "error", "MetaMask not detected!"); return; }
     setTaskState("sendTx", "pending");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -87,7 +100,7 @@ export default function BobTestnet() {
   };
 
   const selfTransaction = async () => {
-    if (!window.ethereum) { setTaskState("selfTx", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("selfTx", "error", "MetaMask not detected!"); return; }
     setTaskState("selfTx", "pending");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -103,7 +116,7 @@ export default function BobTestnet() {
   };
 
   const bridgeTransaction = async () => {
-    if (!window.ethereum) { setTaskState("bridgeTx", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("bridgeTx", "error", "MetaMask not detected!"); return; }
     setTaskState("bridgeTx", "pending");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -119,7 +132,7 @@ export default function BobTestnet() {
   };
 
   const swapTransactionBob = async () => {
-    if (!window.ethereum) { setTaskState("swapTxBob", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("swapTxBob", "error", "MetaMask not detected!"); return; }
     setTaskState("swapTxBob", "pending");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });

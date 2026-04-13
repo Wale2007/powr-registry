@@ -57,8 +57,21 @@ export default function BaseTestnet() {
     } catch {}
   };
 
+  const checkMetaMask = () => {
+    if (!window.ethereum) {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`;
+      } else {
+        alert("MetaMask not detected! Please install the extension.");
+      }
+      return false;
+    }
+    return true;
+  };
+
   const addNetwork = async () => {
-    if (!window.ethereum) { setTaskState("addNetwork", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("addNetwork", "error", "MetaMask not detected!"); return; }
     setTaskState("addNetwork", "pending");
     try {
       await window.ethereum.request({ method: "wallet_addEthereumChain", params: [BASE_SEPOLIA] });
@@ -71,7 +84,7 @@ export default function BaseTestnet() {
   };
 
   const sendTransaction = async () => {
-    if (!window.ethereum) { setTaskState("sendTx", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("sendTx", "error", "MetaMask not detected!"); return; }
     setTaskState("sendTx", "pending");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -87,7 +100,7 @@ export default function BaseTestnet() {
   };
 
   const interactContract = async () => {
-    if (!window.ethereum) { setTaskState("interactContract", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("interactContract", "error", "MetaMask not detected!"); return; }
     setTaskState("interactContract", "pending");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -103,7 +116,7 @@ export default function BaseTestnet() {
   };
 
   const swapTransaction = async () => {
-    if (!window.ethereum) { setTaskState("swapTx", "error", "MetaMask not detected!"); return; }
+    if (!checkMetaMask()) { setTaskState("swapTx", "error", "MetaMask not detected!"); return; }
     setTaskState("swapTx", "pending");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
