@@ -27,10 +27,10 @@ const FAUCETS = [
 ];
 
 const GUIDE_STEPS = [
-  { title: "Install MetaMask", desc: "Visit metamask.io, install the browser extension, and create or import a wallet." },
-  { title: "Add Base Sepolia Network", desc: "Use the 'Add Network' button below or manually add: RPC: https://sepolia.base.org, Chain ID: 84532, Symbol: ETH." },
-  { title: "Claim Test ETH", desc: "Visit one of the faucet links above to receive free testnet ETH. You'll need a small amount for gas." },
-  { title: "Complete Tasks", desc: "Use the task buttons below to execute transactions directly from this page. Each completed task earns XP." },
+  { title: "Open Your POWR Wallet", desc: "Navigate to the Wallet tab in the top navigation bar. If you haven't created a wallet yet, click 'Create New Wallet' — your private key is generated securely on your device." },
+  { title: "Get Free Testnet ETH", desc: "Visit one of the faucet links below. Paste your POWR wallet address (found in the Receive tab) to receive free Base Sepolia ETH directly to your address." },
+  { title: "Check Your Balance", desc: "Return to the Wallet page and click Refresh. Your Base Sepolia ETH balance will appear under the Base chain tab." },
+  { title: "Execute Quests Below", desc: "Click 'Execute' on any quest below. The POWR wallet will automatically sign and broadcast the real transaction on Base Sepolia — no extensions needed." },
 ];
 
 export default function BaseTestnet() {

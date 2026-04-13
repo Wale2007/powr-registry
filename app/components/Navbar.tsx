@@ -12,7 +12,6 @@ const NAV_ITEMS = [
   { href: "/leaderboard", label: "Leaderboard", icon: IconTrophy },
   { href: "/trader", label: "DeFi Rep", icon: IconShield },
   { href: "/wallet", label: "Wallet", icon: IconWallet },
-  { href: "/whitepaper", label: "Whitepaper", icon: IconBook },
   { href: "/profile", label: "Profile", icon: IconUser },
 ];
 
@@ -45,7 +44,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-0.5">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.href);
@@ -53,13 +52,13 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all ${
-                    active ? "nav-link-active bg-primary/10" : "nav-link"
+                  className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
+                    active ? "nav-link-active" : "nav-link"
                   }`}
-                  style={active ? { background: "rgba(59,130,246,0.1)" } : {}}
+                  style={active ? { background: "rgba(59,130,246,0.12)", color: "#3B82F6" } : {}}
                 >
-                  <Icon size={15} />
-                  {item.label}
+                  <Icon size={14} />
+                  <span className="hidden lg:inline">{item.label}</span>
                 </Link>
               );
             })}

@@ -34,10 +34,10 @@ const FAUCETS = [
 ];
 
 const GUIDE_STEPS = [
-  { title: "Install MetaMask", desc: "If you haven't already, get MetaMask from metamask.io and set up your wallet." },
-  { title: "Add BOB Sepolia Network", desc: "Click the 'Add Network' button below or manually add: RPC: https://bob-sepolia.rpc.gobob.xyz, Chain ID: 808813, Symbol: ETH." },
-  { title: "Get Test ETH", desc: "Use a Sepolia faucet to get ETH, then bridge it to BOB Sepolia, or use the BOB faucet if available." },
-  { title: "Execute Tasks", desc: "Click 'Execute' on each task below. MetaMask will prompt you to confirm each transaction." },
+  { title: "Open Your POWR Wallet", desc: "Go to the Wallet tab at the top of the page. Your wallet address is already linked to BOB Sepolia. No MetaMask or browser extension needed." },
+  { title: "Get Sepolia ETH", desc: "Use the faucet links below. Paste your POWR wallet address from the Receive tab. You can bridge Sepolia ETH into BOB Sepolia via the official BOB bridge." },
+  { title: "Verify Your Balance", desc: "Hit Refresh on the Wallet page after a moment. Your balance will display under the Base (EVM) chain since BOB is EVM-compatible and uses the same address." },
+  { title: "Execute Quests", desc: "Click Execute on the quests below. Your POWR wallet will sign and broadcast real transactions on the BOB Sepolia network to earn XP." },
 ];
 
 export default function BobTestnet() {
