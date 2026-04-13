@@ -24,11 +24,11 @@ export default function Navbar() {
 
   return (
     <nav
-      className="sticky top-0 z-50 w-full"
+      className="sticky top-0 z-50 w-full animate-fade"
       style={{
-        background: "rgba(11, 17, 32, 0.88)",
-        backdropFilter: "blur(16px)",
-        borderBottom: "1px solid #1E2D4A",
+        background: "rgba(52, 52, 52, 0.85)",
+        backdropFilter: "blur(20px)",
+        borderBottom: "1px solid var(--color-border)",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +39,7 @@ export default function Navbar() {
               <img src="/powr_logo.png" alt="POWR Logo" className="w-full h-full object-cover" />
             </div>
             <span className="text-base font-bold text-white tracking-tight hidden sm:block">
-              POWR<span style={{ color: "#3B82F6" }}>.PRO</span>
+              POWR<span style={{ color: "var(--color-primary)" }}>.PRO</span>
             </span>
           </Link>
 
@@ -52,10 +52,10 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
+                  className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-300 hover:scale-105 ${
                     active ? "nav-link-active" : "nav-link"
                   }`}
-                  style={active ? { background: "rgba(59,130,246,0.12)", color: "#3B82F6" } : {}}
+                  style={active ? { background: "rgba(109,129,150,0.15)", color: "var(--color-text-primary)" } : {}}
                 >
                   <Icon size={14} />
                   <span className="hidden lg:inline">{item.label}</span>
@@ -96,7 +96,7 @@ export default function Navbar() {
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     active ? "text-primary" : "text-text-secondary"
                   }`}
-                  style={active ? { background: "rgba(59,130,246,0.08)", color: "#3B82F6" } : { color: "#94A3B8" }}
+                  style={active ? { background: "rgba(109,129,150,0.1)", color: "var(--color-text-primary)" } : { color: "var(--color-text-secondary)" }}
                 >
                   <Icon size={18} />
                   {item.label}

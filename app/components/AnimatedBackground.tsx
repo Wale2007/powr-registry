@@ -13,7 +13,7 @@ export default function AnimatedBackground() {
 
     let animationId: number;
     const particles: { x: number; y: number; vx: number; vy: number; size: number; alpha: number }[] = [];
-    const PARTICLE_COUNT = 60;
+    const PARTICLE_COUNT = 40;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -27,10 +27,10 @@ export default function AnimatedBackground() {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: Math.random() * 2 + 0.5,
-        alpha: Math.random() * 0.3 + 0.05,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        size: Math.random() * 2 + 1,
+        alpha: Math.random() * 0.2 + 0.05,
       });
     }
 
@@ -43,10 +43,10 @@ export default function AnimatedBackground() {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
+          if (dist < 200) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(59, 130, 246, ${0.06 * (1 - dist / 150)})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `rgba(109, 129, 150, ${0.08 * (1 - dist / 200)})`;
+            ctx.lineWidth = 0.4;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
@@ -58,7 +58,7 @@ export default function AnimatedBackground() {
       for (const p of particles) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(59, 130, 246, ${p.alpha})`;
+        ctx.fillStyle = `rgba(109, 129, 150, ${p.alpha})`;
         ctx.fill();
 
         p.x += p.vx;

@@ -134,12 +134,12 @@ export default function WalletPage() {
   // ─── Setup Screen ────────────────────────────────────────────────────────────
   if (!mnemonic) {
     return (
-      <div className="min-h-screen" style={{ background: "#0B1120" }}>
+      <div className="min-h-screen">
         <AnimatedBackground />
         <Navbar />
-        <div className="relative z-10 max-w-md mx-auto px-6 py-24 flex flex-col items-center animate-fade-up">
+        <div className="relative z-10 max-w-md mx-auto px-6 py-24 flex flex-col items-center animate-reveal">
           <div className="w-24 h-24 rounded-2xl mb-8 flex items-center justify-center overflow-hidden"
-            style={{ background: "#0D1526", border: "1px solid #1E2D4A" }}>
+            style={{ background: "var(--color-bg-input)", border: "1px solid var(--color-border)" }}>
             <img src="/powr_logo.png" alt="POWR" className="w-16 h-16 object-contain" />
           </div>
           <h1 className="text-3xl font-black text-center mb-3">POWR Wallet</h1>
@@ -158,15 +158,15 @@ export default function WalletPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: "#0B1120" }}>
+    <div className="min-h-screen">
       <AnimatedBackground />
       <Navbar />
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-6">
 
         {/* ─── Header ────────────────────────────────────────────────── */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 animate-fade">
           <div>
-            <p className="text-xs font-bold tracking-widest mb-1" style={{ color: "#64748B" }}>POWR WALLET</p>
+            <p className="text-xs font-bold tracking-widest mb-1" style={{ color: "var(--color-text-muted)" }}>POWR WALLET</p>
             <h1 className="text-2xl font-black">Portfolio</h1>
           </div>
           <button onClick={handleRefresh} disabled={refreshing}
@@ -177,9 +177,9 @@ export default function WalletPage() {
         </div>
 
         {/* ─── Total Balance Card ─────────────────────────────────────── */}
-        <div className="rounded-2xl p-6 mb-6"
-          style={{ background: "linear-gradient(135deg, #0D1E3C 0%, #1a0d3c 100%)", border: "1px solid #1E2D4A" }}>
-          <p className="text-xs font-semibold mb-1" style={{ color: "#64748B" }}>TOTAL BALANCE</p>
+        <div className="rounded-2xl p-6 mb-6 animate-reveal stagger-1"
+          style={{ background: "linear-gradient(135deg, var(--color-bg-elevated) 0%, var(--color-bg-card) 100%)", border: "1px solid var(--color-border)" }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: "var(--color-text-muted)" }}>TOTAL BALANCE</p>
           <h2 className="text-4xl font-black text-white mb-0">${totalUSD.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
         </div>
 
@@ -191,16 +191,16 @@ export default function WalletPage() {
             const isActive = activeChain === cid;
             return (
               <button key={cid} onClick={() => setActiveChain(cid)}
-                className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
+                className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all animate-reveal stagger-${(CHAINS[cid] as any).id === "ethereum" ? 1 : (CHAINS[cid] as any).id === "bsc" ? 2 : (CHAINS[cid] as any).id === "base" ? 3 : (CHAINS[cid] as any).id === "solana" ? 4 : (CHAINS[cid] as any).id === "bitcoin" ? 1 : 2}`}
                 style={{
-                  background: isActive ? `${c.color}18` : "#0D1526",
-                  border: `1px solid ${isActive ? c.color : "#1E2D4A"}`,
+                  background: isActive ? `${c.color}18` : "var(--color-bg-input)",
+                  border: `1px solid ${isActive ? c.color : "var(--color-border)"}`,
                 }}>
                 <div className="w-6 h-6 rounded-full overflow-hidden bg-white/10 mb-1">
                   <img src={(c as any).logo} alt={c.symbol} className="w-full h-full object-contain" />
                 </div>
                 <span className="text-xs font-bold text-white">{c.symbol}</span>
-                <span className="text-xs font-mono" style={{ color: "#64748B" }}>
+                <span className="text-xs font-mono" style={{ color: "var(--color-text-muted)" }}>
                   {(() => {
                     const b = parseFloat(bal || "0");
                     return isNaN(b) ? "0.0000" : b.toFixed(4);
@@ -212,7 +212,7 @@ export default function WalletPage() {
         </div>
 
         {/* ─── Active Chain Detail ────────────────────────────────────── */}
-        <div className="rounded-2xl p-5 mb-6" style={{ background: "#0D1526", border: "1px solid #1E2D4A" }}>
+        <div className="rounded-2xl p-5 mb-6 animate-reveal stagger-3" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 flex items-center justify-center">
@@ -220,7 +220,7 @@ export default function WalletPage() {
               </div>
               <div>
                 <p className="font-bold text-white">{chain.name}</p>
-                <p className="text-xs" style={{ color: "#64748B" }}>{chain.symbol}</p>
+                <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>{chain.symbol}</p>
               </div>
             </div>
             <div className="text-right">
@@ -230,14 +230,14 @@ export default function WalletPage() {
                   return isNaN(b) ? "0.000000" : b.toFixed(6);
                 })()}
               </p>
-              <p className="text-xs" style={{ color: "#64748B" }}>${currentBalanceUSD.toFixed(2)}</p>
+              <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>${currentBalanceUSD.toFixed(2)}</p>
             </div>
           </div>
 
           {/* Address bar */}
           <div className="flex items-center gap-2 p-3 rounded-xl" style={{ background: "rgba(0,0,0,0.4)" }}>
             <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: chain.color }}></div>
-            <p className="font-mono text-xs flex-1 truncate" style={{ color: "#94A3B8" }}>{currentAddress}</p>
+            <p className="font-mono text-xs flex-1 truncate" style={{ color: "var(--color-text-secondary)" }}>{currentAddress}</p>
             <button onClick={() => copy(currentAddress)} className="text-xs px-3 py-1 rounded-lg font-semibold"
               style={{ background: `${chain.color}20`, color: chain.color }}>
               {copied ? "✓" : "Copy"}
@@ -249,11 +249,11 @@ export default function WalletPage() {
         <div className="flex gap-2 mb-6">
           {(["portfolio", "send", "receive", "swap"] as Tab[]).map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)}
-              className="flex-1 py-2.5 text-sm font-bold rounded-xl capitalize"
+              className="flex-1 py-2.5 text-sm font-bold rounded-xl capitalize transition-all"
               style={{
-                background: activeTab === tab ? "#3B82F6" : "#0D1526",
-                color: activeTab === tab ? "white" : "#64748B",
-                border: "1px solid #1E2D4A",
+                background: activeTab === tab ? "var(--color-primary)" : "var(--color-bg-card)",
+                color: activeTab === tab ? "#343434" : "var(--color-text-secondary)",
+                border: "1px solid var(--color-border)",
               }}>
               {tab === "portfolio" ? "Assets" : tab === "send" ? "Send" : tab === "receive" ? "Receive" : "Swap"}
             </button>
@@ -261,7 +261,7 @@ export default function WalletPage() {
         </div>
 
         {/* ─── Tab Content ────────────────────────────────────────────── */}
-        <div className="rounded-2xl p-6" style={{ background: "#0D1526", border: "1px solid #1E2D4A" }}>
+        <div className="rounded-2xl p-6" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
 
           {/* PORTFOLIO */}
           {activeTab === "portfolio" && (
@@ -275,26 +275,26 @@ export default function WalletPage() {
               </div>
 
               <div className="space-y-3">
-                {CHAIN_ORDER.map(cid => {
+                {CHAIN_ORDER.map((cid, idx) => {
                   const c = CHAINS[cid];
                   const bal = parseFloat(balances?.[cid] ?? "0");
                   const usd = bal * (prices[cid] ?? 0);
                   return (
                     <div key={cid} onClick={() => { setActiveChain(cid); setActiveTab("send"); }}
-                      className="flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all hover:opacity-80"
-                      style={{ background: "rgba(0,0,0,0.3)", border: "1px solid #1E2D4A" }}>
+                      className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all hover:bg-white/5 animate-reveal stagger-${(idx % 5) + 1}`}
+                      style={{ background: "rgba(0,0,0,0.2)", border: "1px solid var(--color-border)" }}>
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 flex items-center justify-center">
                           <img src={(c as any).logo} alt={c.symbol} className="w-6 h-6 object-contain" />
                         </div>
                         <div>
                           <p className="font-bold text-white text-sm">{c.symbol}</p>
-                          <p className="text-xs" style={{ color: "#64748B" }}>{c.name}</p>
+                          <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>{c.name}</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="font-mono font-bold text-white text-sm">{bal.toFixed(6)}</p>
-                        <p className="text-xs" style={{ color: "#64748B" }}>${usd.toFixed(2)}</p>
+                        <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>${usd.toFixed(2)}</p>
                       </div>
                     </div>
                   );
@@ -319,26 +319,26 @@ export default function WalletPage() {
 
           {/* SEND */}
           {activeTab === "send" && (
-            <div className="animate-fade-up flex flex-col gap-4">
-              <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "rgba(0,0,0,0.3)" }}>
+            <div className="animate-reveal flex flex-col gap-4">
+              <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "rgba(0,0,0,0.2)" }}>
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 flex items-center justify-center">
                   <img src={(chain as any).logo} alt={chain.symbol} className="w-7 h-7 object-contain" />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white">Sending {chain.symbol}</p>
-                  <p className="text-xs" style={{ color: "#64748B" }}>Balance: {currentBalance}</p>
+                  <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>Balance: {currentBalance}</p>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-bold mb-1.5 block" style={{ color: "#94A3B8" }}>RECIPIENT ADDRESS</label>
+                <label className="text-xs font-bold mb-1.5 block" style={{ color: "var(--color-text-secondary)" }}>RECIPIENT ADDRESS</label>
                 <input type="text" value={sendTo} onChange={e => setSendTo(e.target.value)}
                   placeholder={activeChain === "bitcoin" ? "bc1q..." : activeChain === "solana" ? "Sol..." : activeChain === "tron" ? "T..." : "0x..."}
                   className="input font-mono text-sm w-full" />
               </div>
 
               <div>
-                <label className="text-xs font-bold mb-1.5 block" style={{ color: "#94A3B8" }}>AMOUNT ({chain.symbol})</label>
+                <label className="text-xs font-bold mb-1.5 block" style={{ color: "var(--color-text-secondary)" }}>AMOUNT ({chain.symbol})</label>
                 <div className="flex gap-2">
                   <input type="number" value={sendAmount} onChange={e => setSendAmount(e.target.value)}
                     placeholder="0.00" className="input font-mono text-sm flex-1" />
@@ -427,10 +427,10 @@ export default function WalletPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs font-semibold" style={{ color: "#3B82F6" }}>
+                      <p className="text-xs font-semibold" style={{ color: "var(--color-primary)" }}>
                         ${prices[token.chain]?.toLocaleString("en-US", { maximumFractionDigits: 2 }) ?? "—"}
                       </p>
-                      <p className="text-xs" style={{ color: "#64748B" }}>{token.chain}</p>
+                      <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>{token.chain}</p>
                     </div>
                   </div>
                 ))}

@@ -73,10 +73,10 @@ export default function Dashboard() {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "#0B1120" }}>
+    <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
-        <div className="spinner mx-auto mb-3" style={{ color: "#3B82F6", width: 28, height: 28 }} />
-        <p className="text-sm" style={{ color: "#64748B" }}>Loading Mission Control...</p>
+        <div className="spinner mx-auto mb-3" style={{ color: "var(--color-primary)", width: 28, height: 28 }} />
+        <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>Loading Mission Control...</p>
       </div>
     </div>
   );
@@ -84,34 +84,34 @@ export default function Dashboard() {
   if (!user) return null;
 
   const quickLinks = [
-    { href: "/testnets", title: "Testnet Quests", desc: "Execute transactions on Base & BOB", icon: IconRocket, color: "#3B82F6" },
-    { href: "/info-fi", title: "Info-Fi Scanner", desc: "Scan content & earn XP", icon: IconScan, color: "#10B981" },
-    { href: "/leaderboard", title: "Leaderboard", desc: "View global rankings", icon: IconTrophy, color: "#F59E0B" },
-    { href: "/profile", title: "Your Profile", desc: "Complete your identity", icon: IconUser, color: "#EC4899" },
+    { href: "/testnets", title: "Testnet Quests", desc: "Execute transactions on Base & BOB", icon: IconRocket, color: "var(--color-primary)" },
+    { href: "/info-fi", title: "Info-Fi Scanner", desc: "Scan content & earn XP", icon: IconScan, color: "var(--color-success)" },
+    { href: "/leaderboard", title: "Leaderboard", desc: "View global rankings", icon: IconTrophy, color: "var(--color-text-primary)" },
+    { href: "/profile", title: "Your Profile", desc: "Complete your identity", icon: IconUser, color: "var(--color-secondary-dark)" },
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: "#0B1120" }}>
+    <div className="min-h-screen">
       <AnimatedBackground />
       <Navbar />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome */}
-        <div className="mb-8 animate-fade-up">
+        <div className="mb-8 animate-reveal">
           <p className="stat-label mb-1">Mission Control</p>
           <h1 className="text-3xl font-bold tracking-tight">
-            Welcome, <span className="gradient-text">@{user.username || user.github_username || "Pioneer"}</span>
+            Welcome, <span className="gradient-text" style={{ background: "linear-gradient(135deg, var(--color-text-primary), var(--color-primary))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>@{user.username || user.github_username || "Pioneer"}</span>
           </h1>
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 fade-d1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "Reputation", value: user.reputation_points, color: "#3B82F6" },
-            { label: "Farmer XP", value: user.farmer_xp, color: "#10B981" },
-            { label: "Streak", value: `${user.daily_streak} days`, color: "#F59E0B" },
-            { label: "Tier", value: user.role || "Bronze", color: "#EC4899" },
+            { label: "Reputation", value: user.reputation_points, color: "var(--color-primary)", stagger: "stagger-1" },
+            { label: "Farmer XP", value: user.farmer_xp, color: "var(--color-success)", stagger: "stagger-2" },
+            { label: "Streak", value: `${user.daily_streak} days`, color: "var(--color-text-primary)", stagger: "stagger-3" },
+            { label: "Tier", value: user.role || "Bronze", color: "var(--color-secondary-dark)", stagger: "stagger-4" },
           ].map(s => (
-            <div key={s.label} className="card-static p-5 text-center">
+            <div key={s.label} className={`card-static p-5 text-center animate-reveal ${s.stagger}`}>
               <p className="stat-label mb-1">{s.label}</p>
               <p className="text-2xl font-bold capitalize" style={{ color: s.color }}>{s.value}</p>
             </div>
@@ -121,18 +121,18 @@ export default function Dashboard() {
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Quick Links */}
-          <div className="lg:col-span-2 space-y-4 fade-d2">
+          <div className="lg:col-span-2 space-y-4 animate-reveal stagger-2">
             <p className="stat-label ml-1">Quick Actions</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {quickLinks.map(ql => (
-                <Link key={ql.href} href={ql.href} className="card p-5 flex items-start gap-4 group">
+              {quickLinks.map((ql, idx) => (
+                <Link key={ql.href} href={ql.href} className={`card p-5 flex items-start gap-4 group animate-reveal stagger-${idx + 1}`}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: `${ql.color}12`, border: `1px solid ${ql.color}22` }}>
-                    <ql.icon size={20} style={{ color: ql.color }} />
+                    style={{ background: `rgba(109,129,150,0.1)`, border: `1px solid rgba(109,129,150,0.2)` }}>
+                    <ql.icon size={20} style={{ color: "var(--color-primary)" }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-white text-sm group-hover:text-primary transition-colors">{ql.title}</p>
-                    <p className="text-xs mt-0.5" style={{ color: "#64748B" }}>{ql.desc}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "var(--color-text-secondary)" }}>{ql.desc}</p>
                   </div>
                   <IconArrowRight size={16} className="mt-1 shrink-0 opacity-0 group-hover:opacity-60 transition-all" />
                 </Link>
@@ -141,20 +141,20 @@ export default function Dashboard() {
           </div>
 
           {/* Right: Daily Check-In */}
-          <div className="space-y-4 fade-d3">
+          <div className="space-y-4 animate-reveal stagger-3">
             <p className="stat-label ml-1">Daily Check-In</p>
             <div className="card-static p-6">
               <div className="flex items-center gap-4 mb-5">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-                  style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.15)" }}>
-                  <IconFire size={22} style={{ color: "#F59E0B" }} />
+                   style={{ background: "rgba(109,129,150,0.1)", border: "1px solid rgba(109,129,150,0.2)" }}>
+                  <IconFire size={22} style={{ color: "var(--color-primary)" }} />
                 </div>
                 <div>
                   <p className="text-3xl font-bold text-white">{user.daily_streak}</p>
                   <p className="stat-label">Day Streak</p>
                 </div>
               </div>
-              {checkInMsg && <p className={`text-xs mb-3 ${checkedIn ? "text-secondary" : "text-accent-amber"}`}>{checkInMsg}</p>}
+              {checkInMsg && <p className={`text-xs mb-3 ${checkedIn ? "text-success" : "text-primary"}`}>{checkInMsg}</p>}
               <button onClick={handleCheckIn} disabled={checkInLoading || checkedIn}
                 className={`w-full text-sm font-semibold ${checkedIn ? "btn-secondary" : "btn-primary"}`}
                 style={{ height: 44, opacity: checkInLoading ? 0.6 : 1 }}>
@@ -163,15 +163,15 @@ export default function Dashboard() {
             </div>
 
             {/* Profile Completion */}
-            <div className="card-static p-6">
+            <div className="card-static p-6 animate-reveal stagger-4">
               <div className="flex items-center justify-between mb-3">
                 <p className="stat-label">Profile Completion</p>
-                <span className="text-xs font-bold" style={{ color: "#3B82F6" }}>
+                <span className="text-xs font-bold" style={{ color: "var(--color-primary)" }}>
                   {[user.wallet_address, user.github_username, user.twitter_username, user.discord_username].filter(Boolean).length}/4
                 </span>
               </div>
-              <div className="progress-bar mb-4">
-                <div className="progress-fill" style={{ width: `${[user.wallet_address, user.github_username, user.twitter_username, user.discord_username].filter(Boolean).length * 25}%` }} />
+              <div className="progress-bar mb-4 overflow-hidden bg-black/20">
+                <div className="progress-fill" style={{ background: "var(--color-primary)", width: `${[user.wallet_address, user.github_username, user.twitter_username, user.discord_username].filter(Boolean).length * 25}%` }} />
               </div>
               <Link href="/profile" className="btn-secondary w-full text-sm" style={{ height: 40 }}>
                 <IconUser size={16} /> Complete Profile

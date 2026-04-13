@@ -20,13 +20,15 @@ export const metadata: Metadata = {
 };
 
 import UsernameGate from "./components/UsernameGate";
+import FloatingObjects from "./components/FloatingObjects";
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${inter.variable} dark`}>
-      <body className="min-h-screen antialiased font-sans" style={{ background: "#0B1120", color: "#F1F5F9" }}>
+      <body className="min-h-screen antialiased font-sans animate-fade">
+        <FloatingObjects />
         <UsernameGate>
           {children}
         </UsernameGate>

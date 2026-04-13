@@ -67,8 +67,8 @@ export default function TraderNode() {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "#0B1120" }}>
-      <div className="spinner mx-auto mb-3" style={{ color: "#3B82F6", width: 28, height: 28 }} />
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="spinner mx-auto mb-3" style={{ color: "var(--color-primary)", width: 28, height: 28 }} />
     </div>
   );
 
@@ -99,17 +99,17 @@ export default function TraderNode() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: "#0B1120" }}>
+    <div className="min-h-screen">
       <AnimatedBackground />
       <Navbar />
       
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-8">
-        <div className="mb-8 animate-fade-up">
+        <div className="mb-8 animate-reveal">
           <p className="stat-label mb-1">DeFi Reputation</p>
           <h1 className="text-3xl font-bold tracking-tight text-white">
             The <span className="gradient-text">Trader Node</span>
           </h1>
-          <p className="mt-2 max-w-2xl text-sm" style={{ color: "#94A3B8" }}>
+          <p className="mt-2 max-w-2xl text-sm" style={{ color: "var(--color-text-secondary)" }}>
             Prove your legendary on-chain performance without sharing fake PnL screenshots. 
             Sync your activity to earn Sniper XP and manage your risk vector via the Degen Oracle.
           </p>
@@ -117,26 +117,26 @@ export default function TraderNode() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Card 1: Proof-of-PnL */}
-          <div className="card-static p-6 flex flex-col justify-between fade-d1">
+          <div className="card-static p-6 flex flex-col justify-between animate-reveal stagger-1">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20">
-                  <IconScan size={20} style={{ color: "#3B82F6" }} />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10">
+                  <IconScan size={20} style={{ color: "var(--color-primary)" }} />
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-white leading-tight">Proof-of-PnL</h2>
-                  <p className="text-xs" style={{ color: "#64748B" }}>30-Day On-Chain Activity</p>
+                  <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>30-Day On-Chain Activity</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="p-4 rounded-xl" style={{ background: "rgba(11,17,32,0.5)", border: "1px solid #1E2D4A" }}>
+                <div className="p-4 rounded-xl" style={{ background: "rgba(0,0,0,0.2)", border: "1px solid var(--color-border)" }}>
                   <p className="stat-label">Win Rate</p>
                   <p className="text-2xl font-bold text-white mt-1">
                     {user.win_rate_30d ? `${user.win_rate_30d}%` : "—"}
                   </p>
                 </div>
-                <div className="p-4 rounded-xl" style={{ background: "rgba(11,17,32,0.5)", border: "1px solid #1E2D4A" }}>
+                <div className="p-4 rounded-xl" style={{ background: "rgba(0,0,0,0.2)", border: "1px solid var(--color-border)" }}>
                   <p className="stat-label">Volume (USD)</p>
                   <p className="text-2xl font-bold text-white mt-1">
                     {user.total_volume_usd ? `$${user.total_volume_usd.toLocaleString()}` : "—"}
@@ -158,20 +158,20 @@ export default function TraderNode() {
           </div>
 
           {/* Card 2: Degen Risk Oracle */}
-          <div className="card-static p-6 flex flex-col justify-between fade-d2" style={{ boxShadow: riskShadow, transition: "box-shadow 0.5s ease" }}>
+          <div className="card-static p-6 flex flex-col justify-between animate-reveal stagger-2" style={{ boxShadow: riskShadow, transition: "box-shadow 0.5s ease" }}>
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-500/10 border border-amber-500/20">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10">
                   <IconShield size={20} style={{ color: riskColor }} />
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-white leading-tight">Degen Risk Oracle</h2>
-                  <p className="text-xs" style={{ color: "#64748B" }}>Lending & Borrowing Safety</p>
+                  <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>Lending & Borrowing Safety</p>
                 </div>
               </div>
 
               <div className="flex flex-col items-center justify-center py-6 mb-2">
-                <div className={`relative flex items-center justify-center rounded-full w-32 h-32 mb-2 ${riskAnimation}`} style={{ background: "rgba(11,17,32,0.5)", border: `2px solid ${riskColor}` }}>
+                <div className={`relative flex items-center justify-center rounded-full w-32 h-32 mb-2 ${riskAnimation}`} style={{ background: "rgba(0,0,0,0.2)", border: `2px solid ${riskColor}` }}>
                   <div className="text-center">
                     <p className="text-4xl font-black tracking-tighter" style={{ color: riskColor }}>
                       {hf > 0 ? hf : "—"}
@@ -196,18 +196,18 @@ export default function TraderNode() {
         </div>
 
         {/* Tutorial Section */}
-        <div className="card-static p-6 fade-d3">
+        <div className="card-static p-6 animate-reveal stagger-3">
           <h3 className="text-lg font-bold text-white mb-4">How the Trader Node Works</h3>
           <div className="space-y-4">
             <div className="flex gap-3">
               <div className="w-6 h-6 shrink-0 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold">1</div>
-              <p className="text-sm leading-relaxed" style={{ color: "#94A3B8" }}>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
                 <strong className="text-white">Proof-of-PnL:</strong> Stop pasting fake Binance screenshots. The Trader Node indexes your connected EVM wallets and calculates your actual 30-Day Win Rate and Volume. We verify the math on-chain.
               </p>
             </div>
             <div className="flex gap-3">
               <div className="w-6 h-6 shrink-0 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold">2</div>
-              <p className="text-sm leading-relaxed" style={{ color: "#94A3B8" }}>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
                 <strong className="text-white">Degen Risk Oracle:</strong> Checks your active positions on Aave, Compound, and other lending markets to calculate a unified Health Factor. A pulse below 1.5 indicates severe liquidation warnings.
               </p>
             </div>

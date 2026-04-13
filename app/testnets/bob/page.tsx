@@ -165,28 +165,28 @@ export default function BobTestnet() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: "#0B1120" }}>
+    <div className="min-h-screen">
       <AnimatedBackground />
       <Navbar />
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-8">
-        <div className="flex items-center gap-2 mb-2">
-          <Link href="/testnets" className="text-xs font-medium" style={{ color: "#64748B" }}>Testnets</Link>
-          <span style={{ color: "#2A3F66" }}>/</span>
+        <div className="flex items-center gap-2 mb-2 animate-fade">
+          <Link href="/testnets" className="text-xs font-medium" style={{ color: "var(--color-text-muted)" }}>Testnets</Link>
+          <span style={{ color: "var(--color-border)" }}>/</span>
         </div>
-        <div className="mb-8 animate-fade-up">
+        <div className="mb-8 animate-reveal">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold"
-              style={{ background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.2)", color: "#F59E0B" }}>B</div>
+              style={{ background: "rgba(109,129,150,0.1)", border: "1px solid rgba(109,129,150,0.2)", color: "var(--color-primary)" }}>B</div>
             <h1 className="text-3xl font-bold">BOB Sepolia</h1>
             <span className="badge-green text-xs">Active</span>
           </div>
-          <p className="text-sm" style={{ color: "#94A3B8" }}>
+          <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
             Build on Bitcoin — a hybrid L2 combining Bitcoin security with EVM compatibility.
           </p>
         </div>
 
         {/* Guide */}
-        <div className="card-static p-7 mb-8 fade-d1">
+        <div className="card-static p-7 mb-8 animate-reveal stagger-1">
           <h2 className="text-lg font-bold mb-5">Native Mode Guide</h2>
           <div className="space-y-5">
             {[
@@ -198,7 +198,7 @@ export default function BobTestnet() {
                 <div className="step-number shrink-0">{i + 1}</div>
                 <div>
                   <p className="text-sm font-semibold text-white">{step.title}</p>
-                  <p className="text-xs mt-1" style={{ color: "#94A3B8", lineHeight: 1.6 }}>{step.desc}</p>
+                  <p className="text-xs mt-1" style={{ color: "var(--color-text-secondary)", lineHeight: 1.6 }}>{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -206,25 +206,25 @@ export default function BobTestnet() {
         </div>
 
         {/* Faucets */}
-        <div className="card-static p-7 mb-8 fade-d2">
+        <div className="card-static p-7 mb-8 animate-reveal stagger-2">
           <h2 className="text-lg font-bold mb-4">Claim Free Test ETH</h2>
           <div className="space-y-3">
             {FAUCETS.map(f => (
               <a key={f.name} href={f.url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center justify-between p-4 rounded-xl transition-all hover:bg-bg-elevated"
-                style={{ background: "#0D1526", border: "1px solid #1E2D4A" }}>
+                className="flex items-center justify-between p-4 rounded-xl transition-all hover:bg-white/5"
+                style={{ background: "rgba(0,0,0,0.2)", border: "1px solid var(--color-border)" }}>
                 <div>
                   <p className="text-sm font-semibold text-white">{f.name}</p>
-                  <p className="text-xs mt-0.5" style={{ color: "#64748B" }}>{f.desc}</p>
+                  <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>{f.desc}</p>
                 </div>
-                <IconExternalLink size={16} style={{ color: "#F59E0B" }} />
+                <IconExternalLink size={16} style={{ color: "var(--color-primary)" }} />
               </a>
             ))}
           </div>
         </div>
 
         {/* Tasks */}
-        <div className="fade-d3">
+        <div className="animate-reveal stagger-3">
           <h2 className="text-lg font-bold mb-4">Quests</h2>
           <div className="space-y-4">
             {TASKS.map(task => {
@@ -239,11 +239,11 @@ export default function BobTestnet() {
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-white">{task.title}</p>
-                        <p className="text-xs mt-0.5" style={{ color: "#64748B" }}>{task.desc}</p>
+                        <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>{task.desc}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold" style={{ color: status === "done" ? "#10B981" : "#F59E0B" }}>
+                      <span className="text-xs font-bold" style={{ color: status === "done" ? "var(--color-success)" : "var(--color-primary)" }}>
                         {status === "done" ? "DONE" : `+${task.xp} XP`}
                       </span>
                       {status !== "done" && (
