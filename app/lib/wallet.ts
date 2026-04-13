@@ -227,14 +227,16 @@ export async function sendEVMTransaction(opts: {
 
   const walletClient = createWalletClient({
     account,
-    chain: chain.viemChain as any,
+    chain: chain.viemChain,
     transport: http(chain.rpc),
   });
 
-  const hash = await walletClient.sendTransaction({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hash = await (walletClient as any).sendTransaction({
     to: to as Hex,
     value: parseEther(amountEth),
+    account,
   });
 
-  return hash;
+  return hash as string;
 }
