@@ -14,13 +14,17 @@ export const metadata: Metadata = {
     "A decentralized reputation protocol that verifies Web3 builders and farmers to prevent Sybil attacks. Prove your identity. Build your reputation.",
 };
 
+import UsernameGate from "./components/UsernameGate";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${inter.variable} dark`}>
       <body className="min-h-screen antialiased font-sans" style={{ background: "#0B1120", color: "#F1F5F9" }}>
-        {children}
+        <UsernameGate>
+          {children}
+        </UsernameGate>
       </body>
     </html>
   );

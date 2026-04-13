@@ -6,6 +6,7 @@
 -- 1. Profiles Table
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  username TEXT UNIQUE,
   wallet_address TEXT UNIQUE,
   github_username TEXT,
   twitter_username TEXT,

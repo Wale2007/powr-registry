@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { IconShield, IconRocket, IconScan, IconTrophy, IconBook, IconUser } from "./SvgIcons";
+import { IconShield, IconRocket, IconScan, IconTrophy, IconBook, IconUser, IconWallet } from "./SvgIcons";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: IconShield },
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/info-fi", label: "Info-Fi", icon: IconScan },
   { href: "/leaderboard", label: "Leaderboard", icon: IconTrophy },
   { href: "/trader", label: "DeFi Rep", icon: IconShield },
+  { href: "/wallet", label: "Wallet", icon: IconWallet },
   { href: "/whitepaper", label: "Whitepaper", icon: IconBook },
   { href: "/profile", label: "Profile", icon: IconUser },
 ];

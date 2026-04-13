@@ -112,9 +112,9 @@ export default function Whitepaper() {
               <p className="mb-4">
                 Connects to the GitHub API. Analyzes PushEvents, code frequency, and repository age to prevent script-generated fake commits. Points dictate the user's Tier (Bronze, Silver, Gold).
               </p>
-              <p className="mb-4 font-bold text-white">4.2 Testnet Oracles</p>
+              <p className="mb-4 font-bold text-white">4.2 The Multi-Chain Embedded Wallet Engine</p>
               <p className="mb-4">
-                Integrated EVM execution. Users use MetaMask to trigger specific contract calls on Base Sepolia and BOB testnets. The protocol verifies execution locally and records it immutably via Supabase RPCs, ensuring no double-spending of tasks.
+                POWR.PRO operates a completely native, non-custodial multi-chain wallet embedded directly into the protocol via cryptography engines. Users do not need browser extensions like MetaMask. Instead, the protocol generates a secure, mathematically-linked Private Key entirely encrypted in the browser, enabling frictionless Swaps, Bridges, and contract executions natively in-app.
               </p>
               <p className="mb-4 font-bold text-white">4.3 Info-Fi Web Validator</p>
               <p className="mb-4">

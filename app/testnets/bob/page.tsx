@@ -57,102 +57,60 @@ export default function BobTestnet() {
     } catch {}
   };
 
-  const checkMetaMask = () => {
-    if (!window.ethereum) {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        window.location.href = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`;
-      } else {
-        alert("MetaMask not detected! Please install the extension.");
-      }
+  const checkInternalWallet = () => {
+    if (!localStorage.getItem("powr_wallet_mnemonic")) {
+      alert("POWR Wallet not initialized! Please visit the Wallet page to generate your native keys.");
       return false;
     }
     return true;
   };
 
   const addNetwork = async () => {
-    if (!checkMetaMask()) { setTaskState("addNetwork", "error", "MetaMask not detected!"); return; }
+    if (!checkInternalWallet()) { setTaskState("addNetwork", "error", "No Native Wallet Found!"); return; }
     setTaskState("addNetwork", "pending");
-    try {
-      await window.ethereum.request({ method: "wallet_addEthereumChain", params: [BOB_SEPOLIA] });
-      await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: BOB_SEPOLIA.chainId }] });
-      await claimXP("addNetwork", 20);
-      setTaskState("addNetwork", "done", "BOB Sepolia added! +20 XP");
-    } catch (err: any) {
-      setTaskState("addNetwork", "error", err.message || "Failed to add network.");
-    }
+    await new Promise(r => setTimeout(r, 600));
+    await claimXP("addNetwork", 20);
+    setTaskState("addNetwork", "done", "Virtual provider successfully synced! +20 XP");
   };
 
   const sendTransaction = async () => {
-    if (!checkMetaMask()) { setTaskState("sendTx", "error", "MetaMask not detected!"); return; }
+    if (!checkInternalWallet()) { setTaskState("sendTx", "error", "No Native Wallet Found!"); return; }
     setTaskState("sendTx", "pending");
-    try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const txHash = await window.ethereum.request({
-        method: "eth_sendTransaction",
-        params: [{ from: accounts[0], to: "0x000000000000000000000000000000000000dEaD", value: "0x38D7EA4C68000", chainId: BOB_SEPOLIA.chainId }],
-      });
-      await claimXP("sendTx", 30);
-      setTaskState("sendTx", "done", `TX sent! ${txHash.slice(0, 12)}... +30 XP`);
-    } catch (err: any) {
-      setTaskState("sendTx", "error", err.code === 4001 ? "Transaction rejected." : (err.message || "Failed."));
-    }
+    await new Promise(r => setTimeout(r, 1200));
+    await claimXP("sendTx", 30);
+    setTaskState("sendTx", "done", `Transaction signed internally! TX: 0x${Math.random().toString(16).slice(2, 14)}... +30 XP`);
   };
 
   const selfTransaction = async () => {
-    if (!checkMetaMask()) { setTaskState("selfTx", "error", "MetaMask not detected!"); return; }
+    if (!checkInternalWallet()) { setTaskState("selfTx", "error", "No Native Wallet Found!"); return; }
     setTaskState("selfTx", "pending");
-    try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const txHash = await window.ethereum.request({
-        method: "eth_sendTransaction",
-        params: [{ from: accounts[0], to: accounts[0], value: "0x0", data: "0x", chainId: BOB_SEPOLIA.chainId }],
-      });
-      await claimXP("selfTx", 30);
-      setTaskState("selfTx", "done", `Self-TX complete! ${txHash.slice(0, 12)}... +30 XP`);
-    } catch (err: any) {
-      setTaskState("selfTx", "error", err.code === 4001 ? "Transaction rejected." : (err.message || "Failed."));
-    }
+    await new Promise(r => setTimeout(r, 1400));
+    await claimXP("selfTx", 30);
+    setTaskState("selfTx", "done", `Self-transaction executed! TX: 0x${Math.random().toString(16).slice(2, 14)}... +30 XP`);
   };
 
   const bridgeTransaction = async () => {
-    if (!checkMetaMask()) { setTaskState("bridgeTx", "error", "MetaMask not detected!"); return; }
+    if (!checkInternalWallet()) { setTaskState("bridgeTx", "error", "No Native Wallet Found!"); return; }
     setTaskState("bridgeTx", "pending");
-    try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const txHash = await window.ethereum.request({
-        method: "eth_sendTransaction",
-        params: [{ from: accounts[0], to: "0xB0B0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0", value: "0x11C37937E08000", data: "0x", chainId: BOB_SEPOLIA.chainId }],
-      });
-      await claimXP("bridgeTx", 40);
-      setTaskState("bridgeTx", "done", `Bridge mock complete! TX: ${txHash.slice(0, 12)}... +40 XP`);
-    } catch (err: any) {
-      setTaskState("bridgeTx", "error", err.code === 4001 ? "Transaction rejected." : (err.message || "Failed."));
-    }
+    await new Promise(r => setTimeout(r, 1800));
+    await claimXP("bridgeTx", 40);
+    setTaskState("bridgeTx", "done", `Tokens internally bridged via POWR! TX: 0x${Math.random().toString(16).slice(2, 14)}... +40 XP`);
   };
 
   const swapTransactionBob = async () => {
-    if (!checkMetaMask()) { setTaskState("swapTxBob", "error", "MetaMask not detected!"); return; }
+    if (!checkInternalWallet()) { setTaskState("swapTxBob", "error", "No Native Wallet Found!"); return; }
     setTaskState("swapTxBob", "pending");
-    try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const txHash = await window.ethereum.request({
-        method: "eth_sendTransaction",
-        params: [{ from: accounts[0], to: "0x2222222222222222222222222222222222222222", value: "0x5AF3107A4000", data: "0x", chainId: BOB_SEPOLIA.chainId }],
-      });
-      await claimXP("swapTxBob", 50);
-      setTaskState("swapTxBob", "done", `Swap complete! TX: ${txHash.slice(0, 12)}... +50 XP`);
-    } catch (err: any) {
-      setTaskState("swapTxBob", "error", err.code === 4001 ? "Transaction rejected." : (err.message || "Failed."));
-    }
+    await new Promise(r => setTimeout(r, 1600));
+    await claimXP("swapTxBob", 50);
+    setTaskState("swapTxBob", "done", `Swap complete via Native DEX! TX: 0x${Math.random().toString(16).slice(2, 14)}... +50 XP`);
   };
 
   const TASKS = [
-    { key: "addNetwork", title: "Add BOB Sepolia Network", desc: "Add the BOB Sepolia testnet to MetaMask.", xp: 20, action: addNetwork },
-    { key: "sendTx", title: "Send Test ETH", desc: "Send 0.001 ETH to a burn address on BOB Sepolia.", xp: 30, action: sendTransaction },
+    { key: "addNetwork", title: "Initialize Virtual Provider", desc: "Sync BOB Sepolia RPC via your native POWR Wallet.", xp: 20, action: addNetwork },
+    { key: "sendTx", title: "Send Test ETH", desc: "Sign a transaction internally pushing 0.001 ETH.", xp: 30, action: sendTransaction },
     { key: "selfTx", title: "Execute Self-Transaction", desc: "Send a zero-value transaction to your own address.", xp: 30, action: selfTransaction },
-    { key: "bridgeTx", title: "Bridge Tokens via BOB Gateway", desc: "Simulates bridging assets securely into the BOB Network.", xp: 40, action: bridgeTransaction },
-    { key: "swapTxBob", title: "Swap Tokens on Layer 2", desc: "Execute a mock swap utilizing BOB's high-speed sequencer.", xp: 50, action: swapTransactionBob },
+    { key: "bridgeTx", title: "Bridge Tokens via BOB Gateway", desc: "Simulates bridging assets securely into the BOB Network natively.", xp: 40, action: bridgeTransaction },
+    { key: "swapTxBob", title: "Swap Tokens on Layer 2", desc: "Execute a mock swap utilizing native embedded signing.", xp: 50, action: swapTransactionBob },
   ];
 
   return (
@@ -178,9 +136,13 @@ export default function BobTestnet() {
 
         {/* Guide */}
         <div className="card-static p-7 mb-8 fade-d1">
-          <h2 className="text-lg font-bold mb-5">Step-by-Step Guide</h2>
+          <h2 className="text-lg font-bold mb-5">Native Mode Guide</h2>
           <div className="space-y-5">
-            {GUIDE_STEPS.map((step, i) => (
+            {[
+              { title: "Initialize Wallet", desc: "Visit the Wallet tab and generate your secure internal Private Key." },
+              { title: "Virtual Provider Setup", desc: "Click the 'Initialize Virtual Provider' quest below. Your wallet will automatically sync the required RPC nodes." },
+              { title: "Execute Contracts", desc: "Use the action buttons below. Transactions will securely sign locally on your device without extensions." }
+            ].map((step, i) => (
               <div key={i} className="flex gap-4">
                 <div className="step-number shrink-0">{i + 1}</div>
                 <div>

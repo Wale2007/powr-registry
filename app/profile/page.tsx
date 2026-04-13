@@ -16,6 +16,9 @@ export default function ProfilePage() {
   const [discordInput, setDiscordInput] = useState("");
   const [saving, setSaving] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
+  const [editingUsername, setEditingUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -82,42 +85,12 @@ export default function ProfilePage() {
     init();
   }, [router]);
 
-  const connectWallet = async () => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (!window.ethereum) {
-      if (isMobile) {
-        window.location.href = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`;
-      } else {
-        alert("Please install MetaMask to connect your wallet!");
-      }
-      return;
-    }
-    setSaving("wallet");
-    try {
-      // Force Explicit Unlock Popup
-      await window.ethereum.request({
-        method: "wallet_requestPermissions",
-        params: [{ eth_accounts: {} }],
-      });
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const addr = accounts[0].toLowerCase();
-      await supabase.from("profiles").update({ wallet_address: addr }).eq("id", sessionId);
-      setUser((p: any) => ({ ...p, wallet_address: addr }));
-    } catch (err: any) {
-      let msg = err.message || "Connection failed. Please check your MetaMask app.";
-      if (msg.toLowerCase().includes("at least one account")) {
-        msg = "Your browser's built-in wallet (like Brave Wallet) is empty! Please set up an account, or go to your browser settings and switch your 'Default Web3 Wallet' to MetaMask.";
-      }
-      alert("Wallet Error: " + msg);
-    }
-    setSaving(null);
+  const connectWallet = () => {
+    router.push("/wallet");
   };
 
   const disconnectWallet = async () => {
-    setSaving("disconnect");
-    await supabase.from("profiles").update({ wallet_address: null }).eq("id", sessionId);
-    setUser((p: any) => ({ ...p, wallet_address: null }));
-    setSaving(null);
+    alert("Custodian wallets cannot be disconnected. They are bound mathematically to your profile.");
   };
 
   const handleOAuth = async (provider: "twitter" | "discord" | "github") => {
@@ -143,6 +116,31 @@ export default function ProfilePage() {
     setSyncing(false);
   };
 
+  const handleEditUsername = async () => {
+    if (editingUsername) {
+      const sanitized = newUsername.trim().toLowerCase();
+      if (sanitized === user.username) { setEditingUsername(false); return; }
+      if (sanitized.length < 3 || sanitized.length > 20 || !/^[a-z0-9_]+$/.test(sanitized)) {
+        setUsernameError("Invalid format"); return;
+      }
+      setSaving("username");
+      const { data: existing } = await supabase.from("profiles").select("id").eq("username", sanitized).single();
+      if (existing) {
+        setUsernameError("Already taken!");
+        setSaving(null);
+        return;
+      }
+      await supabase.from("profiles").update({ username: sanitized }).eq("id", sessionId);
+      setUser({ ...user, username: sanitized });
+      setEditingUsername(false);
+      setUsernameError("");
+      setSaving(null);
+    } else {
+      setNewUsername(user.username || "");
+      setEditingUsername(true);
+    }
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: "#0B1120" }}><div className="spinner" style={{ color: "#3B82F6", width: 28, height: 28 }} /></div>;
   if (!user) return null;
 
@@ -164,6 +162,38 @@ export default function ProfilePage() {
           <p className="stat-label mb-1">Identity</p>
           <h1 className="text-3xl font-bold">Your Profile</h1>
           <p className="text-sm mt-2" style={{ color: "#94A3B8" }}>Connect all accounts to maximize your reputation score.</p>
+        </div>
+
+        {/* Username Banner */}
+        <div className="card-static p-6 mb-6 animate-fade-up">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+            <div>
+              <p className="text-sm font-semibold text-white mb-1">POWR Protocol Username</p>
+              {editingUsername ? (
+                 <div>
+                   <div className="flex items-center gap-2">
+                     <span className="text-xl font-bold text-gray-500">@</span>
+                     <input type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value.toLowerCase())} placeholder="username" className="input text-lg font-mono tracking-tight max-w-[200px]" style={{ padding: "6px 12px" }} />
+                   </div>
+                   {usernameError && <p className="text-xs text-accent-red mt-1">{usernameError}</p>}
+                 </div>
+              ) : (
+                <p className="text-2xl font-bold font-mono tracking-tight" style={{ color: "#3B82F6" }}>@{user.username || "unclaimed"}</p>
+              )}
+            </div>
+            
+            <div className="flex gap-2">
+              {editingUsername && <button onClick={() => { setEditingUsername(false); setUsernameError(""); }} className="btn-ghost text-sm">Cancel</button>}
+              <button 
+                onClick={handleEditUsername} 
+                disabled={saving === "username"}
+                className={editingUsername ? "btn-success text-sm" : "btn-secondary text-sm"}
+                style={{ padding: "8px 16px" }}
+              >
+                {saving === "username" ? <div className="spinner" /> : editingUsername ? "Save" : "Edit Username"}
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Progress */}
