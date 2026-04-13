@@ -27,6 +27,9 @@ export default function TraderNode() {
 
   useEffect(() => {
     const init = async () => {
+      if (window.location.hash.includes("access_token")) {
+        await new Promise(resolve => setTimeout(resolve, 800));
+      }
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { router.push("/"); return; }
       setSessionId(session.user.id);

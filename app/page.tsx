@@ -1,11 +1,31 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AnimatedBackground from "@/app/components/AnimatedBackground";
 import { IconShield, IconChain, IconRocket, IconArrowRight, IconGitHub } from "@/app/components/SvgIcons";
 import { supabase } from "@/lib/supabase";
 
 export default function LandingPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Standard session check
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) router.push("/dashboard");
+    });
+
+    // Detect OAuth login returns dynamically
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        router.push("/dashboard");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
+
   const handleLogin = async (provider: "github" | "google") => {
     await supabase.auth.signInWithOAuth({
       provider,
