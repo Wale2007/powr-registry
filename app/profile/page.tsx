@@ -89,7 +89,11 @@ export default function ProfilePage() {
       await supabase.from("profiles").update({ wallet_address: addr }).eq("id", sessionId);
       setUser((p: any) => ({ ...p, wallet_address: addr }));
     } catch (err: any) {
-      alert("Wallet Error: " + (err.message || "Connection failed. Please check your MetaMask app."));
+      let msg = err.message || "Connection failed. Please check your MetaMask app.";
+      if (msg.toLowerCase().includes("at least one account")) {
+        msg = "Your browser's built-in wallet (like Brave Wallet) is empty! Please set up an account, or go to your browser settings and switch your 'Default Web3 Wallet' to MetaMask.";
+      }
+      alert("Wallet Error: " + msg);
     }
     setSaving(null);
   };
