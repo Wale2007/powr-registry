@@ -11,6 +11,7 @@ import { dailyCheckIn } from "@/app/actions/github";
 
 interface Profile {
   id: string; wallet_address: string | null; github_username: string | null;
+  username: string | null;
   reputation_points: number; farmer_xp: number; daily_streak: number; role: string;
   twitter_username?: string | null; discord_username?: string | null;
 }
@@ -98,7 +99,7 @@ export default function Dashboard() {
         <div className="mb-8 animate-fade-up">
           <p className="stat-label mb-1">Mission Control</p>
           <h1 className="text-3xl font-bold tracking-tight">
-            Welcome, <span className="gradient-text">{user.github_username || "Pioneer"}</span>
+            Welcome, <span className="gradient-text">@{user.username || user.github_username || "Pioneer"}</span>
           </h1>
         </div>
 
