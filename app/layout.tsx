@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   title: "POWR.PRO — The Truth Layer of Web3",
   description:
     "A decentralized reputation protocol that verifies Web3 builders and farmers to prevent Sybil attacks. Prove your identity. Build your reputation.",
+  icons: {
+    icon: "/powr_logo.png",
+    shortcut: "/powr_logo.png",
+    apple: "/powr_logo.png",
+  },
 };
 
 import UsernameGate from "./components/UsernameGate";
