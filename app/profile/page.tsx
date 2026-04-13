@@ -20,14 +20,53 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const init = async () => {
+      // 1. Catch redirect errors from Supabase
+      if (window.location.hash.includes("error_description")) {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const errorMsg = hashParams.get("error_description")?.replace(/\+/g, " ");
+        if (errorMsg) {
+          alert(`Connection Error: ${errorMsg}\n\n(This usually happens if that social account is already linked to a different login!)`);
+        }
+      }
+
       if (window.location.hash.includes("access_token")) {
         await new Promise(resolve => setTimeout(resolve, 800));
       }
+
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { router.push("/"); return; }
       setSessionId(session.user.id);
+      
+      const { data: userAuth } = await supabase.auth.getUser();
+      const identities = userAuth?.user?.identities || [];
+      
       const { data } = await supabase.from("profiles").select("*").eq("id", session.user.id).single();
-      if (data) { setUser(data); setTwitterInput(data.twitter_username || ""); setDiscordInput(data.discord_username || ""); }
+      if (data) {
+        let updates: any = {};
+        let needUpdate = false;
+        
+        identities.forEach(id => {
+          if (id.provider === "twitter" && !data.twitter_username) {
+            updates.twitter_username = id.identity_data?.preferred_username || id.identity_data?.user_name || id.identity_data?.name;
+            needUpdate = true;
+          }
+          if (id.provider === "discord" && !data.discord_username) {
+            updates.discord_username = id.identity_data?.custom_claims?.global_name || id.identity_data?.user_name || id.identity_data?.name;
+            needUpdate = true;
+          }
+          if (id.provider === "github" && !data.github_username) {
+            updates.github_username = id.identity_data?.preferred_username || id.identity_data?.user_name;
+            needUpdate = true;
+          }
+        });
+
+        if (needUpdate) {
+          await supabase.from("profiles").update(updates).eq("id", session.user.id);
+          Object.assign(data, updates);
+        }
+
+        setUser(data);
+      }
       setLoading(false);
     };
     init();
@@ -53,12 +92,22 @@ export default function ProfilePage() {
     setSaving(null);
   };
 
+  const disconnectWallet = async () => {
+    setSaving("disconnect");
+    await supabase.from("profiles").update({ wallet_address: null }).eq("id", sessionId);
+    setUser((p: any) => ({ ...p, wallet_address: null }));
+    setSaving(null);
+  };
+
   const handleOAuth = async (provider: "twitter" | "discord" | "github") => {
     setSaving(provider);
-    await supabase.auth.linkIdentity({
+    const { error } = await supabase.auth.linkIdentity({
       provider,
       options: { redirectTo: `${window.location.origin}/profile` },
     });
+    if (error) {
+      alert(`Could not start linking: ${error.message}`);
+    }
     setSaving(null);
   };
 
@@ -126,7 +175,14 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   {conn.connected ? (
-                    <span className="badge-green text-xs"><IconCheck size={12} /> Connected</span>
+                    <div className="flex items-center gap-3">
+                      <span className="badge-green text-xs"><IconCheck size={12} /> Connected</span>
+                      {conn.key === "wallet" && (
+                        <button onClick={disconnectWallet} disabled={saving === "disconnect"} className="btn-ghost text-xs text-accent-red hover:text-accent-red" style={{ padding: "4px 8px" }}>
+                          {saving === "disconnect" ? "..." : "Disconnect"}
+                        </button>
+                      )}
+                    </div>
                   ) : conn.key === "wallet" ? (
                     <button onClick={connectWallet} disabled={saving === "wallet"} className="btn-primary text-xs" style={{ padding: "6px 16px" }}>
                       {saving === "wallet" ? <div className="spinner" /> : "Connect"}
