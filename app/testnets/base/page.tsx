@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import AnimatedBackground from "@/app/components/AnimatedBackground";
-import { IconCheck, IconExternalLink, IconSend, IconArrowRight } from "@/app/components/SvgIcons";
+import { IconCheck, IconExternalLink, IconSend } from "@/app/components/SvgIcons";
+import { loadMnemonic, deriveAllAddresses, sendEVMTransaction } from "@/app/lib/wallet";
+import { createWalletClient, createPublicClient, http } from "viem";
+import { mnemonicToAccount } from "viem/accounts";
+import { baseSepolia } from "viem/chains";
 
 const BASE_SEPOLIA = {
   chainId: "0x14a34",
@@ -57,44 +61,89 @@ export default function BaseTestnet() {
     } catch {}
   };
 
-  const checkInternalWallet = () => {
-    if (!localStorage.getItem("powr_wallet_mnemonic")) {
-      alert("POWR Wallet not initialized! Please visit the Wallet page to generate your native keys.");
-      return false;
+  // Check wallet is ready
+  const getInternalWallet = () => {
+    const mn = loadMnemonic();
+    if (!mn) {
+      alert("POWR Wallet not initialized! Visit the Wallet tab to generate your keys.");
+      return null;
     }
-    return true;
+    return mn;
   };
 
   const addNetwork = async () => {
-    if (!checkInternalWallet()) { setTaskState("addNetwork", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("addNetwork", "error", "No wallet found!"); return; }
     setTaskState("addNetwork", "pending");
-    await new Promise(r => setTimeout(r, 600));
-    await claimXP("addNetwork", 20);
-    setTaskState("addNetwork", "done", "Virtual provider successfully synced! +20 XP");
+    try {
+      const addrs = deriveAllAddresses(mn);
+      setTaskState("addNetwork", "done", `Base Sepolia synced! Address: ${addrs.base.slice(0,16)}... +20 XP`);
+      await claimXP("addNetwork", 20);
+    } catch (e: any) {
+      setTaskState("addNetwork", "error", e.message);
+    }
   };
 
   const sendTransaction = async () => {
-    if (!checkInternalWallet()) { setTaskState("sendTx", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("sendTx", "error", "No wallet found!"); return; }
     setTaskState("sendTx", "pending");
-    await new Promise(r => setTimeout(r, 1200));
-    await claimXP("sendTx", 30);
-    setTaskState("sendTx", "done", `Transaction signed internally! TX: 0x${Math.random().toString(16).slice(2, 14)}... +30 XP`);
+    try {
+      const account = mnemonicToAccount(mn);
+      const walletClient = createWalletClient({
+        account, chain: baseSepolia, transport: http("https://sepolia.base.org"),
+      });
+      const hash = await walletClient.sendTransaction({
+        to: "0x000000000000000000000000000000000000dEaD",
+        value: BigInt("100000000000000"), // 0.0001 ETH
+      });
+      await claimXP("sendTx", 30);
+      setTaskState("sendTx", "done", `TX: ${hash.slice(0, 20)}... +30 XP`);
+    } catch (e: any) {
+      setTaskState("sendTx", "error", e.shortMessage || e.message || "Transaction failed");
+    }
   };
 
   const interactContract = async () => {
-    if (!checkInternalWallet()) { setTaskState("interactContract", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("interactContract", "error", "No wallet found!"); return; }
     setTaskState("interactContract", "pending");
-    await new Promise(r => setTimeout(r, 1400));
-    await claimXP("interactContract", 30);
-    setTaskState("interactContract", "done", `Self-transaction executed! TX: 0x${Math.random().toString(16).slice(2, 14)}... +30 XP`);
+    try {
+      const account = mnemonicToAccount(mn);
+      const walletClient = createWalletClient({
+        account, chain: baseSepolia, transport: http("https://sepolia.base.org"),
+      });
+      const hash = await walletClient.sendTransaction({
+        to: account.address,
+        value: BigInt(0),
+        data: "0x",
+      });
+      await claimXP("interactContract", 30);
+      setTaskState("interactContract", "done", `Self-TX: ${hash.slice(0, 20)}... +30 XP`);
+    } catch (e: any) {
+      setTaskState("interactContract", "error", e.shortMessage || e.message || "Failed");
+    }
   };
 
   const swapTransaction = async () => {
-    if (!checkInternalWallet()) { setTaskState("swapTx", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("swapTx", "error", "No wallet found!"); return; }
     setTaskState("swapTx", "pending");
-    await new Promise(r => setTimeout(r, 1600));
-    await claimXP("swapTx", 50);
-    setTaskState("swapTx", "done", `Swap complete via Native DEX! TX: 0x${Math.random().toString(16).slice(2, 14)}... +50 XP`);
+    try {
+      const account = mnemonicToAccount(mn);
+      const walletClient = createWalletClient({
+        account, chain: baseSepolia, transport: http("https://sepolia.base.org"),
+      });
+      const hash = await walletClient.sendTransaction({
+        to: "0x1111111254fb6c44bac0bed2854e76f90643097d" as `0x${string}`,
+        value: BigInt("50000000000000"), // 0.00005 ETH to mock aggregator
+        data: "0x",
+      });
+      await claimXP("swapTx", 50);
+      setTaskState("swapTx", "done", `Swap TX: ${hash.slice(0, 20)}... +50 XP`);
+    } catch (e: any) {
+      setTaskState("swapTx", "error", e.shortMessage || e.message || "Failed");
+    }
   };
 
   const TASKS = [

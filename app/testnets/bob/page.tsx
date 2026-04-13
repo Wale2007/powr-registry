@@ -7,6 +7,17 @@ import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import AnimatedBackground from "@/app/components/AnimatedBackground";
 import { IconCheck, IconExternalLink, IconSend } from "@/app/components/SvgIcons";
+import { loadMnemonic, deriveAllAddresses } from "@/app/lib/wallet";
+import { createWalletClient, http, defineChain } from "viem";
+import { mnemonicToAccount } from "viem/accounts";
+
+const bobSepolia = defineChain({
+  id: 808813,
+  name: "BOB Sepolia",
+  nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  rpcUrls: { default: { http: ["https://bob-sepolia.rpc.gobob.xyz"] } },
+  blockExplorers: { default: { name: "BOB Explorer", url: "https://bob-sepolia.explorer.gobob.xyz" } },
+});
 
 const BOB_SEPOLIA = {
   chainId: "0xC5B25",
@@ -57,52 +68,92 @@ export default function BobTestnet() {
     } catch {}
   };
 
-  const checkInternalWallet = () => {
-    if (!localStorage.getItem("powr_wallet_mnemonic")) {
-      alert("POWR Wallet not initialized! Please visit the Wallet page to generate your native keys.");
-      return false;
+  const getInternalWallet = () => {
+    const mn = loadMnemonic();
+    if (!mn) {
+      alert("POWR Wallet not initialized! Visit the Wallet tab to generate your keys.");
+      return null;
     }
-    return true;
+    return mn;
   };
 
   const addNetwork = async () => {
-    if (!checkInternalWallet()) { setTaskState("addNetwork", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("addNetwork", "error", "No wallet!"); return; }
     setTaskState("addNetwork", "pending");
-    await new Promise(r => setTimeout(r, 600));
+    const addrs = deriveAllAddresses(mn);
+    setTaskState("addNetwork", "done", `BOB Sepolia synced! Address: ${addrs.ethereum.slice(0,16)}... +20 XP`);
     await claimXP("addNetwork", 20);
-    setTaskState("addNetwork", "done", "Virtual provider successfully synced! +20 XP");
   };
 
   const sendTransaction = async () => {
-    if (!checkInternalWallet()) { setTaskState("sendTx", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("sendTx", "error", "No wallet!"); return; }
     setTaskState("sendTx", "pending");
-    await new Promise(r => setTimeout(r, 1200));
-    await claimXP("sendTx", 30);
-    setTaskState("sendTx", "done", `Transaction signed internally! TX: 0x${Math.random().toString(16).slice(2, 14)}... +30 XP`);
+    try {
+      const account = mnemonicToAccount(mn);
+      const walletClient = createWalletClient({ account, chain: bobSepolia, transport: http() });
+      const hash = await walletClient.sendTransaction({
+        to: "0x000000000000000000000000000000000000dEaD",
+        value: BigInt("100000000000000"),
+      });
+      await claimXP("sendTx", 30);
+      setTaskState("sendTx", "done", `TX: ${hash.slice(0, 20)}... +30 XP`);
+    } catch (e: any) {
+      setTaskState("sendTx", "error", e.shortMessage || e.message);
+    }
   };
 
   const selfTransaction = async () => {
-    if (!checkInternalWallet()) { setTaskState("selfTx", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("selfTx", "error", "No wallet!"); return; }
     setTaskState("selfTx", "pending");
-    await new Promise(r => setTimeout(r, 1400));
-    await claimXP("selfTx", 30);
-    setTaskState("selfTx", "done", `Self-transaction executed! TX: 0x${Math.random().toString(16).slice(2, 14)}... +30 XP`);
+    try {
+      const account = mnemonicToAccount(mn);
+      const walletClient = createWalletClient({ account, chain: bobSepolia, transport: http() });
+      const hash = await walletClient.sendTransaction({ to: account.address, value: BigInt(0), data: "0x" });
+      await claimXP("selfTx", 30);
+      setTaskState("selfTx", "done", `Self-TX: ${hash.slice(0, 20)}... +30 XP`);
+    } catch (e: any) {
+      setTaskState("selfTx", "error", e.shortMessage || e.message);
+    }
   };
 
   const bridgeTransaction = async () => {
-    if (!checkInternalWallet()) { setTaskState("bridgeTx", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("bridgeTx", "error", "No wallet!"); return; }
     setTaskState("bridgeTx", "pending");
-    await new Promise(r => setTimeout(r, 1800));
-    await claimXP("bridgeTx", 40);
-    setTaskState("bridgeTx", "done", `Tokens internally bridged via POWR! TX: 0x${Math.random().toString(16).slice(2, 14)}... +40 XP`);
+    try {
+      const account = mnemonicToAccount(mn);
+      const walletClient = createWalletClient({ account, chain: bobSepolia, transport: http() });
+      const hash = await walletClient.sendTransaction({
+        to: "0xB0B0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0" as `0x${string}`,
+        value: BigInt("10000000000000"),
+      });
+      await claimXP("bridgeTx", 40);
+      setTaskState("bridgeTx", "done", `Bridge TX: ${hash.slice(0, 20)}... +40 XP`);
+    } catch (e: any) {
+      setTaskState("bridgeTx", "error", e.shortMessage || e.message);
+    }
   };
 
   const swapTransactionBob = async () => {
-    if (!checkInternalWallet()) { setTaskState("swapTxBob", "error", "No Native Wallet Found!"); return; }
+    const mn = getInternalWallet();
+    if (!mn) { setTaskState("swapTxBob", "error", "No wallet!"); return; }
     setTaskState("swapTxBob", "pending");
-    await new Promise(r => setTimeout(r, 1600));
-    await claimXP("swapTxBob", 50);
-    setTaskState("swapTxBob", "done", `Swap complete via Native DEX! TX: 0x${Math.random().toString(16).slice(2, 14)}... +50 XP`);
+    try {
+      const account = mnemonicToAccount(mn);
+      const walletClient = createWalletClient({ account, chain: bobSepolia, transport: http() });
+      const hash = await walletClient.sendTransaction({
+        to: "0x2222222222222222222222222222222222222222" as `0x${string}`,
+        value: BigInt("50000000000000"),
+        data: "0x",
+      });
+      await claimXP("swapTxBob", 50);
+      setTaskState("swapTxBob", "done", `Swap TX: ${hash.slice(0, 20)}... +50 XP`);
+    } catch (e: any) {
+      setTaskState("swapTxBob", "error", e.shortMessage || e.message);
+    }
   };
 
   const TASKS = [
