@@ -83,7 +83,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t" style={{ borderColor: "#1E2D4A", background: "rgba(11,17,32,0.95)" }}>
+        <div className="md:hidden border-t" style={{ borderColor: "var(--color-border)", background: "rgba(52,52,52,0.98)" }}>
           <div className="px-4 py-3 space-y-1">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;

@@ -64,13 +64,13 @@ export default function UsernameGate({ children, initialProfile }: { children: R
 
   if (profile && !profile.username) {
     return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <div className="card w-full max-w-md p-8 animate-fade-up border" style={{ borderColor: "#1E2D4A", background: "#0B1120" }}>
-          <div className="w-12 h-12 rounded-xl mb-6 mx-auto flex items-center justify-center" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)" }}>
-             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl animate-fade">
+        <div className="card w-full max-w-md p-8 animate-reveal border-white/10" style={{ background: "var(--color-bg-card-elevated)" }}>
+          <div className="w-12 h-12 rounded-xl mb-6 mx-auto flex items-center justify-center" style={{ background: "rgba(109,129,150,0.1)", border: "1px solid rgba(109,129,150,0.2)" }}>
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           </div>
-          <h2 className="text-2xl font-bold text-white text-center mb-2">Claim Your Username</h2>
-          <p className="text-sm text-center mb-8" style={{ color: "#94A3B8" }}>
+          <h2 className="text-2xl font-black text-white text-center mb-2 tracking-tight">Claim Your Username</h2>
+          <p className="text-sm text-center mb-8" style={{ color: "var(--color-text-secondary)" }}>
             Every pioneer on POWR.PRO needs a unique identifier. Choose carefully, as this will represent your reputation on the leaderboard.
           </p>
 

@@ -16,7 +16,7 @@ import { mainnet, bsc, base } from "viem/chains";
 export const CHAINS = {
   ethereum: {
     id: "ethereum", name: "Ethereum", symbol: "ETH", icon: "Ξ",
-    color: "#627EEA", decimals: 18,
+    color: "#6D8196", decimals: 18,
     rpc: "https://eth.drpc.org",
     viemChain: mainnet,
     explorer: "https://etherscan.io",
@@ -24,7 +24,7 @@ export const CHAINS = {
   },
   bsc: {
     id: "bsc", name: "BNB Smart Chain", symbol: "BNB", icon: "⬡",
-    color: "#F0B90B", decimals: 18,
+    color: "#7A6D4A", decimals: 18,
     rpc: "https://bsc-dataseed.binance.org",
     viemChain: bsc,
     explorer: "https://bscscan.com",
@@ -32,7 +32,7 @@ export const CHAINS = {
   },
   base: {
     id: "base", name: "Base", symbol: "ETH", icon: "◉",
-    color: "#0052FF", decimals: 18,
+    color: "#4A5D7A", decimals: 18,
     rpc: "https://mainnet.base.org",
     viemChain: base,
     explorer: "https://basescan.org",
@@ -40,7 +40,7 @@ export const CHAINS = {
   },
   solana: {
     id: "solana", name: "Solana", symbol: "SOL", icon: "◎",
-    color: "#9945FF", decimals: 9,
+    color: "#6A5A7A", decimals: 9,
     rpc: "https://api.mainnet-beta.solana.com",
     viemChain: null,
     explorer: "https://solscan.io",
@@ -48,7 +48,7 @@ export const CHAINS = {
   },
   bitcoin: {
     id: "bitcoin", name: "Bitcoin", symbol: "BTC", icon: "₿",
-    color: "#F7931A", decimals: 8,
+    color: "#7A5D4A", decimals: 8,
     rpc: "https://blockchain.info",
     viemChain: null,
     explorer: "https://mempool.space",
@@ -56,7 +56,7 @@ export const CHAINS = {
   },
   tron: {
     id: "tron", name: "Tron", symbol: "TRX", icon: "♦",
-    color: "#EB0029", decimals: 6,
+    color: "#7A4A4A", decimals: 6,
     rpc: "https://api.trongrid.io",
     viemChain: null,
     explorer: "https://tronscan.org",

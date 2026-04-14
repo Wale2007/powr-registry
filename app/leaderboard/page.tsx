@@ -38,23 +38,23 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen relative" style={{ background: "#0B1120" }}>
+    <div className="min-h-screen relative">
       <AnimatedBackground />
       <Navbar />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-10">
-        <div className="mb-10 text-center animate-fade-up">
+        <div className="mb-10 text-center animate-reveal">
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white mb-2">
             Global <span className="gradient-text">Rankings</span>
           </h1>
-          <p className="text-sm" style={{ color: "#94A3B8" }}>
+          <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
             Real-time reputation standing. The truest builders rise to the top.
           </p>
         </div>
 
         {/* ─── Top 3 Podium (Desktop) ─── */}
         {!loading && leaders.length >= 3 && (
-          <div className="hidden sm:grid grid-cols-3 gap-6 mb-12 fade-d1 items-end">
+          <div className="hidden sm:grid grid-cols-3 gap-6 mb-12 animate-reveal stagger-1 items-end">
             {[1, 0, 2].map((idx) => {
               const p = leaders[idx];
               const isFirst = idx === 0;
@@ -64,8 +64,8 @@ export default function Leaderboard() {
                   className={`card rounded-2xl p-6 text-center shadow-lg relative ${isFirst ? "z-10" : ""}`}
                   style={{
                     height: isFirst ? "280px" : "240px",
-                    background: isFirst ? "linear-gradient(180deg, #1A2540 0%, #131B2E 100%)" : "var(--color-bg-card)",
-                    border: isFirst ? "1px solid rgba(59,130,246,0.3)" : "1px solid var(--color-border)",
+                    background: isFirst ? "linear-gradient(180deg, rgba(109,129,150,0.15) 0%, rgba(109,129,150,0.05) 100%)" : "var(--color-bg-card)",
+                    border: isFirst ? "1px solid var(--color-primary)" : "1px solid var(--color-border)",
                     transform: isFirst ? "translateY(-16px)" : "none",
                   }}
                 >
@@ -76,18 +76,18 @@ export default function Leaderboard() {
                     <p className="font-bold text-white text-lg truncate mb-1">
                       {p.github_username || "Pioneer"}
                     </p>
-                    <p className="text-xs font-mono truncate px-2 py-1 bg-black/20 rounded mx-auto inline-block mb-6" style={{ color: "#64748B" }}>
+                    <p className="text-xs font-mono truncate px-2 py-1 bg-black/20 rounded mx-auto inline-block mb-6" style={{ color: "var(--color-text-muted)" }}>
                       {p.wallet_address ? `${p.wallet_address.slice(0, 8)}...${p.wallet_address.slice(-4)}` : "No wallet linked"}
                     </p>
                     
                     <div className="flex gap-4 justify-center">
                       <div className="text-center">
-                        <p className="text-xl font-bold" style={{ color: "#10B981" }}>{p.farmer_xp || 0}</p>
+                        <p className="text-xl font-bold" style={{ color: "var(--color-success)" }}>{p.farmer_xp || 0}</p>
                         <p className="text-[10px] uppercase font-bold text-white/40 tracking-wider">Farmer XP</p>
                       </div>
                       <div className="w-px h-8 bg-white/10" />
                       <div className="text-center">
-                        <p className="text-xl font-bold" style={{ color: "#3B82F6" }}>{p.reputation_points || 0}</p>
+                        <p className="text-xl font-bold" style={{ color: "var(--color-primary)" }}>{p.reputation_points || 0}</p>
                         <p className="text-[10px] uppercase font-bold text-white/40 tracking-wider">Rep</p>
                       </div>
                     </div>
@@ -99,14 +99,14 @@ export default function Leaderboard() {
         )}
 
         {/* ─── Table ─── */}
-        <div className="card-static overflow-hidden fade-d2">
+        <div className="card-static overflow-hidden animate-reveal stagger-2">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr style={{ borderBottom: "1px solid var(--color-border)", background: "rgba(0,0,0,0.2)" }}>
-                <th className="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider" style={{ color: "#64748B" }}>Rank</th>
-                <th className="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider" style={{ color: "#64748B" }}>Pioneer Identity</th>
-                <th className="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider" style={{ color: "#64748B" }}>Farmer XP</th>
-                <th className="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider text-right" style={{ color: "#64748B" }}>Reputation</th>
+                <th className="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>Rank</th>
+                <th className="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>Pioneer Identity</th>
+                <th className="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>Farmer XP</th>
+                <th className="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider text-right" style={{ color: "var(--color-text-muted)" }}>Reputation</th>
               </tr>
             </thead>
             <tbody>
@@ -117,13 +117,13 @@ export default function Leaderboard() {
                   </td>
                   <td className="p-4 sm:p-5">
                     <p className="font-bold text-white">{p.github_username || "Anonymous Scout"}</p>
-                    <p className="text-[11px] font-mono mt-0.5" style={{ color: "#64748B" }}>
+                    <p className="text-[11px] font-mono mt-0.5" style={{ color: "var(--color-text-muted)" }}>
                       {p.wallet_address ? `${p.wallet_address.substring(0, 10)}...${p.wallet_address.slice(-4)}` : "No wallet"}
                     </p>
                   </td>
                   <td className="p-4 sm:p-5">
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold"
-                      style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>
+                      style={{ background: "rgba(109,129,150,0.1)", color: "var(--color-success)" }}>
                       {p.farmer_xp || 0} XP
                     </span>
                   </td>
@@ -139,14 +139,14 @@ export default function Leaderboard() {
 
           {loading && (
             <div className="p-16 text-center">
-              <div className="spinner mx-auto mb-3" style={{ color: "#3B82F6", width: "24px", height: "24px" }} />
-              <p className="text-sm" style={{ color: "#64748B" }}>Querying on-chain identities...</p>
+              <div className="spinner mx-auto mb-3" style={{ color: "var(--color-primary)", width: "24px", height: "24px" }} />
+              <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>Querying on-chain identities...</p>
             </div>
           )}
 
           {!loading && leaders.length === 0 && (
             <div className="p-16 text-center">
-              <p className="text-sm" style={{ color: "#64748B" }}>No pioneers have claimed their reputation yet.</p>
+              <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>No pioneers have claimed their reputation yet.</p>
             </div>
           )}
         </div>

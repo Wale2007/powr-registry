@@ -141,12 +141,12 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: "#0B1120" }}><div className="spinner" style={{ color: "#3B82F6", width: 28, height: 28 }} /></div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="spinner" style={{ color: "var(--color-primary)", width: 28, height: 28 }} /></div>;
   if (!user) return null;
 
   const connections = [
-    { key: "wallet", label: "Ethereum Wallet", icon: IconWallet, connected: !!user.wallet_address, value: user.wallet_address ? `${user.wallet_address.slice(0,6)}...${user.wallet_address.slice(-4)}` : null, color: "#3B82F6" },
-    { key: "github", label: "GitHub", icon: IconGitHub, connected: !!user.github_username, value: user.github_username, color: "#F1F5F9" },
+    { key: "wallet", label: "Ethereum Wallet", icon: IconWallet, connected: !!user.wallet_address, value: user.wallet_address ? `${user.wallet_address.slice(0,6)}...${user.wallet_address.slice(-4)}` : null, color: "var(--color-primary)" },
+    { key: "github", label: "GitHub", icon: IconGitHub, connected: !!user.github_username, value: user.github_username, color: "var(--color-text)" },
     { key: "twitter", label: "Twitter / X", icon: IconTwitter, connected: !!user.twitter_username, value: user.twitter_username ? `@${user.twitter_username}` : null, color: "#1DA1F2" },
     { key: "discord", label: "Discord", icon: IconDiscord, connected: !!user.discord_username, value: user.discord_username, color: "#5865F2" },
   ];
@@ -154,18 +154,18 @@ export default function ProfilePage() {
   const completedCount = connections.filter(c => c.connected).length;
 
   return (
-    <div className="min-h-screen" style={{ background: "#0B1120" }}>
+    <div className="min-h-screen">
       <AnimatedBackground />
       <Navbar />
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 py-8">
-        <div className="mb-8 animate-fade-up">
+        <div className="mb-8 animate-reveal">
           <p className="stat-label mb-1">Identity</p>
           <h1 className="text-3xl font-bold">Your Profile</h1>
-          <p className="text-sm mt-2" style={{ color: "#94A3B8" }}>Connect all accounts to maximize your reputation score.</p>
+          <p className="text-sm mt-2" style={{ color: "var(--color-text-secondary)" }}>Connect all accounts to maximize your reputation score.</p>
         </div>
 
         {/* Username Banner */}
-        <div className="card-static p-6 mb-6 animate-fade-up">
+        <div className="card-static p-6 mb-6 animate-reveal stagger-1">
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <div>
               <p className="text-sm font-semibold text-white mb-1">POWR Protocol Username</p>
@@ -178,7 +178,7 @@ export default function ProfilePage() {
                    {usernameError && <p className="text-xs text-accent-red mt-1">{usernameError}</p>}
                  </div>
               ) : (
-                <p className="text-2xl font-bold font-mono tracking-tight" style={{ color: "#3B82F6" }}>@{user.username || "unclaimed"}</p>
+                <p className="text-2xl font-bold font-mono tracking-tight" style={{ color: "var(--color-primary)" }}>@{user.username || "unclaimed"}</p>
               )}
             </div>
             
@@ -197,10 +197,10 @@ export default function ProfilePage() {
         </div>
 
         {/* Progress */}
-        <div className="card-static p-5 mb-8 animate-fade-up">
+        <div className="card-static p-5 mb-8 animate-reveal stagger-2">
           <div className="flex justify-between items-center mb-2">
             <p className="text-sm font-semibold text-white">Profile Completion</p>
-            <span className="text-sm font-bold" style={{ color: "#3B82F6" }}>{completedCount}/4</span>
+            <span className="text-sm font-bold" style={{ color: "var(--color-primary)" }}>{completedCount}/4</span>
           </div>
           <div className="progress-bar"><div className="progress-fill" style={{ width: `${completedCount * 25}%` }} /></div>
         </div>
@@ -208,19 +208,19 @@ export default function ProfilePage() {
         {/* Connection Cards */}
         <div className="space-y-4">
           {connections.map((conn, i) => (
-            <div key={conn.key} className={`card-static p-5 fade-d${i+1}`}>
+            <div key={conn.key} className={`card-static p-5 animate-reveal`} style={{ animationDelay: `${0.4 + i * 0.1}s` }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                    style={{ background: `${conn.color}12`, border: `1px solid ${conn.color}22` }}>
-                    <conn.icon size={20} style={{ color: conn.color }} />
+                    style={{ background: `rgba(109,129,150,0.1)`, border: `1px solid rgba(109,129,150,0.2)` }}>
+                    <conn.icon size={20} style={{ color: "var(--color-primary)" }} />
                   </div>
                   <div>
                     <p className="font-semibold text-white text-sm">{conn.label}</p>
                     {conn.connected ? (
-                      <p className="text-xs mt-0.5" style={{ color: "#10B981" }}>{conn.value}</p>
+                      <p className="text-xs mt-0.5" style={{ color: "var(--color-success)" }}>{conn.value}</p>
                     ) : (
-                      <p className="text-xs mt-0.5" style={{ color: "#64748B" }}>Not connected</p>
+                      <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>Not connected</p>
                     )}
                   </div>
                 </div>
@@ -261,13 +261,13 @@ export default function ProfilePage() {
 
         {/* GitHub Sync */}
         {user.github_username && (
-          <div className="card-static p-5 mt-6 fade-d5">
+          <div className="card-static p-5 mt-6 animate-reveal" style={{ animationDelay: "0.8s" }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <IconShield size={18} style={{ color: "#10B981" }} />
+                <IconShield size={18} style={{ color: "var(--color-success)" }} />
                 <div>
                   <p className="text-sm font-semibold text-white">GitHub Activity Sync</p>
-                  <p className="text-xs" style={{ color: "#64748B" }}>{user.reputation_points} commits · {user.role || "bronze"} tier</p>
+                  <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>{user.reputation_points} commits · {user.role || "bronze"} tier</p>
                 </div>
               </div>
               <button onClick={handleGitHubSync} disabled={syncing} className="btn-secondary text-xs" style={{ padding: "6px 16px" }}>

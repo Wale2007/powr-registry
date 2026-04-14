@@ -436,13 +436,13 @@ export default function WalletPage() {
                 ))}
               </div>
 
-              <div className="p-3 rounded-xl flex items-center gap-2" style={{ background: "rgba(59,130,246,0.05)", border: "1px solid rgba(59,130,246,0.15)" }}>
-                <span className="text-blue-400 text-sm">🔄</span>
+              <div className="p-3 rounded-xl flex items-center gap-2" style={{ background: "rgba(109,129,150,0.05)", border: "1px solid rgba(109,129,150,0.15)" }}>
+                <span className="text-primary-light text-sm">🔄</span>
                 <div>
                   <p className="text-xs font-bold text-white">
                     Route: {activeChain === "solana" ? "Jupiter / Raydium" : activeChain === "bitcoin" ? "Thorchain" : "Uniswap / 1inch"}
                   </p>
-                  <p className="text-xs" style={{ color: "#64748B" }}>Best price aggregated automatically</p>
+                  <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>Best price aggregated automatically</p>
                 </div>
               </div>
 

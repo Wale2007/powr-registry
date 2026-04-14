@@ -26,20 +26,20 @@ export default function Dashboard() {
   const router = useRouter();
 
   const [feedItems, setFeedItems] = useState([
-    { id: 1, time: "Just now", text: "Pioneer 0x7F... just opened a 10x Long on $ETH", color: "#10B981" },
-    { id: 2, time: "2 min ago", text: "Pioneer Wale2007 claimed 500 XP", color: "#3B82F6" },
-    { id: 3, time: "5 min ago", text: "Oracle 0xA1... liquidation alert triggered", color: "#F59E0B" },
-    { id: 4, time: "12 min ago", text: "Node 0x33... verified BOB Network task", color: "#EC4899" },
+    { id: 1, time: "Just now", text: "Pioneer 0x7F... just opened a 10x Long on $ETH", color: "var(--color-success)" },
+    { id: 2, time: "2 min ago", text: "Pioneer Wale2007 claimed 500 XP", color: "var(--color-primary)" },
+    { id: 3, time: "5 min ago", text: "Oracle 0xA1... liquidation alert triggered", color: "var(--color-text-secondary)" },
+    { id: 4, time: "12 min ago", text: "Node 0x33... verified BOB Network task", color: "var(--color-primary-light)" },
   ]);
 
   useEffect(() => {
     // Simulate real-time alpha feed
     const interval = setInterval(() => {
       const items = [
-        { text: `Pioneer 0x${Math.random().toString(16).substring(2, 4).toUpperCase()}... synced Trader Node`, color: "#3B82F6" },
-        { text: `Oracle 0x${Math.random().toString(16).substring(2, 4).toUpperCase()}... hit Health Factor 0.9!`, color: "#EF4444" },
-        { text: `Whale 0x${Math.random().toString(16).substring(2, 4).toUpperCase()}... added 50 ETH LP on Base`, color: "#10B981" },
-        { text: `Top Tier Wale2007 just claimed 50 Sniper XP`, color: "#F59E0B" }
+        { text: `Pioneer 0x${Math.random().toString(16).substring(2, 4).toUpperCase()}... synced Trader Node`, color: "var(--color-primary)" },
+        { text: `Oracle 0x${Math.random().toString(16).substring(2, 4).toUpperCase()}... hit Health Factor 0.9!`, color: "var(--color-accent-red)" },
+        { text: `Whale 0x${Math.random().toString(16).substring(2, 4).toUpperCase()}... added 50 ETH LP on Base`, color: "var(--color-success)" },
+        { text: `Top Tier Wale2007 just claimed 50 Sniper XP`, color: "var(--color-primary-light)" }
       ];
       const newItem = items[Math.floor(Math.random() * items.length)];
       setFeedItems(prev => [{ id: Date.now(), time: "Just now", ...newItem }, ...prev.map(p => ({ ...p, time: p.time === "Just now" ? "1 min ago" : p.time })).slice(0, 3)]);
@@ -180,14 +180,13 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Alpha Radar Terminal */}
-        <div className="mt-8 fade-d4">
+        <div className="mt-8 animate-reveal stagger-4">
           <p className="stat-label ml-1 mb-2">Alpha Radar (Live Feed)</p>
-          <div className="card-static p-0 overflow-hidden border border-[#1E2D4A]" style={{ background: "#060A14" }}>
-            <div className="flex items-center gap-2 px-4 py-2 border-b border-[#1E2D4A]" style={{ background: "rgba(30,45,74,0.3)" }}>
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+          <div className="card-static p-0 overflow-hidden border-white/5" style={{ background: "rgba(109,129,150,0.05)" }}>
+            <div className="flex items-center gap-2 px-4 py-2 border-b border-white/5" style={{ background: "rgba(109,129,150,0.1)" }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+              <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
               <span className="text-xs font-mono ml-2 text-primary opacity-80">node@powr.pro:~/radar$ tail -f events.log</span>
             </div>
             <div className="p-4 font-mono text-sm space-y-3">

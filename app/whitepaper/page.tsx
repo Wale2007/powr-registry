@@ -22,23 +22,23 @@ export default function Whitepaper() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "#0B1120" }}>
+    <div className="min-h-screen">
       <AnimatedBackground />
       <Navbar />
       
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col md:flex-row gap-12">
         
         {/* Sidebar Table of Contents */}
-        <div className="hidden md:block w-64 shrink-0 fade-d1">
+        <div className="hidden md:block w-64 shrink-0 animate-reveal">
           <div className="sticky top-24 card-static p-6">
-            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "#64748B" }}>Content</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "var(--color-text-muted)" }}>Content</p>
             <ul className="space-y-3">
               {sections.map(s => (
                 <li key={s.id}>
                   <button 
                     onClick={() => scrollTo(s.id)}
                     className="text-sm font-medium hover:text-primary transition-colors text-left"
-                    style={{ color: "#94A3B8" }}
+                    style={{ color: "var(--color-text-secondary)" }}
                   >
                     {s.title}
                   </button>
@@ -49,20 +49,20 @@ export default function Whitepaper() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 max-w-3xl fade-d2">
+        <div className="flex-1 max-w-3xl animate-reveal stagger-1">
           
           <div className="mb-16">
             <div className="inline-block px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-xs font-bold text-primary mb-4">
               V1.0 - Draft
             </div>
             <h1 className="text-4xl sm:text-5xl font-black mb-4">POWR.PRO Protocol</h1>
-            <p className="text-lg" style={{ color: "#94A3B8" }}>The Truth Layer of Web3: Decentralized Reputation Infrastructure</p>
+            <p className="text-lg" style={{ color: "var(--color-text-secondary)" }}>The Truth Layer of Web3: Decentralized Reputation Infrastructure</p>
           </div>
 
-          <div className="space-y-16" style={{ color: "#F1F5F9", lineHeight: 1.8 }}>
+          <div className="space-y-16" style={{ color: "var(--color-text)", lineHeight: 1.8 }}>
             
             <section id="abstract">
-              <h2 className="text-2xl font-bold mb-4" style={{ color: "#3B82F6" }}>1. Abstract</h2>
+              <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--color-primary)" }}>1. Abstract</h2>
               <p className="mb-4">
                 POWR.PRO is a decentralized reputation protocol designed to solve the Sybil problem in Web3. 
                 By combining on-chain transaction history with specialized off-chain data (such as GitHub commits and social reach), 
@@ -72,12 +72,12 @@ export default function Whitepaper() {
             </section>
 
             <section id="problem">
-              <h2 className="text-2xl font-bold mb-4" style={{ color: "#3B82F6" }}>2. The Sybil Problem</h2>
+              <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--color-primary)" }}>2. The Sybil Problem</h2>
               <p className="mb-4">
                 Current Web3 incentive structures (airdrops, testnets, retroactive funding) are severely compromised by Sybil attacks. 
                 A single operator can launch thousands of wallets, spoofing protocol activity to extract value.
               </p>
-              <ul className="list-disc pl-5 space-y-2 mb-4" style={{ color: "#94A3B8" }}>
+              <ul className="list-disc pl-5 space-y-2 mb-4" style={{ color: "var(--color-text-secondary)" }}>
                 <li><strong className="text-white">Airdrop Farming:</strong> Dilutes rewards for real users.</li>
                 <li><strong className="text-white">Governance Capture:</strong> Threatens the integrity of DAOs.</li>
                 <li><strong className="text-white">False Metrics:</strong> Prevents protocols from accurately measuring adoption.</li>
@@ -85,7 +85,7 @@ export default function Whitepaper() {
             </section>
 
             <section id="solution">
-              <h2 className="text-2xl font-bold mb-4" style={{ color: "#3B82F6" }}>3. The Solution: Proof of Work & Reputation</h2>
+              <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--color-primary)" }}>3. The Solution: Proof of Work & Reputation</h2>
               <p className="mb-4">
                 POWR.PRO introduces a multi-dimensional identity framework. Instead of asking "who are you?", we ask "what have you done?".
               </p>
@@ -107,7 +107,7 @@ export default function Whitepaper() {
             </section>
 
             <section id="mechanics">
-              <h2 className="text-2xl font-bold mb-4" style={{ color: "#3B82F6" }}>4. Protocol Mechanics</h2>
+              <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--color-primary)" }}>4. Protocol Mechanics</h2>
               <p className="mb-4 font-bold text-white">4.1 Architect Nodes (GitHub Sync)</p>
               <p className="mb-4">
                 Connects to the GitHub API. Analyzes PushEvents, code frequency, and repository age to prevent script-generated fake commits. Points dictate the user's Tier (Bronze, Silver, Gold).
@@ -123,7 +123,7 @@ export default function Whitepaper() {
             </section>
 
             <section id="roadmap">
-              <h2 className="text-2xl font-bold mb-4" style={{ color: "#3B82F6" }}>5. Roadmap</h2>
+              <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--color-primary)" }}>5. Roadmap</h2>
               <ul className="space-y-4">
                 <li className="flex gap-4 items-start">
                   <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0 border border-primary/30 text-primary font-bold text-xs">V1</div>
